@@ -27,6 +27,16 @@ public class Celularr {
         this.gama = gama;
     }
 
+    public Celularr(int stock, String modelo, double precio, Marcaa marca, SistemaOperativo sistemaOperativo, Gama gama) {
+        this.stock = stock;
+        this.modelo = modelo;
+        this.precio = precio;
+        this.marca = marca;
+        this.sistemaOperativo = sistemaOperativo;
+        this.gama = gama;
+    }
+    
+
     public int getId() {
         return id;
     }

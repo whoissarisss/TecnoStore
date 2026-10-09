@@ -4,19 +4,19 @@ public class DetalleVentaa {
     private int id;
     private Celularr celular;
     private int cantidad;
-    private double subtotal;
+    private double precio;
 
-    public DetalleVentaa(int id, Celularr celular, int cantidad, double subtotal) {
+    public DetalleVentaa(int id, Celularr celular, int cantidad, double precio) {
         this.id = id;
         this.celular = celular;
         this.cantidad = cantidad;
-        this.subtotal = subtotal;
+        this.precio = precio;
     }
 
-    public DetalleVentaa(Celularr celular, int cantidad, double subtotal) {
+    public DetalleVentaa(Celularr celular, int cantidad, double precio) {
         this.celular = celular;
         this.cantidad = cantidad;
-        this.subtotal = subtotal;
+        this.precio = precio;
     }
 
     public int getId() {
@@ -43,12 +43,12 @@ public class DetalleVentaa {
         this.cantidad = cantidad;
     }
 
-    public double getSubtotal() {
-        return subtotal;
+    public double getPrecio() {
+        return precio;
     }
 
-    public void setSubtotal(double subtotal) {
-        this.subtotal = subtotal;
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
     
     

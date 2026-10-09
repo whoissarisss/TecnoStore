@@ -9,9 +9,18 @@ public class MenuCliente {
      public int opcionTipoLogIn() {
 
         return v.validarEntero("""
-                               1. Registrarse
-                               2. Iniciar sesion
-                               3. Salir
+                               ╭─────────────────╮
+                               │             ⋆｡°✩TECNOSTORE⋆｡°✩             │
+                               │       ── Qué haremos hoy? ──         │
+                               ├─────────────────┤
+                               │                                                                    │
+                               │   1.  Registrarse                                        │
+                               │   2.  Iniciar sesion                                    │
+                               │   3.  Salir                                                    │
+                               │                                                                    │
+                               ├─────────────────┤
+                               │   Ingresa una opción:                             │
+                               ╰─────────────────╯
                                """);
 
     }
@@ -19,11 +28,21 @@ public class MenuCliente {
       public int OpcionAccion() {
 
         return v.validarEntero("""
-                               1. Carrito de compras
-                               2. Actualizar mi perfil
-                               3. Ver mi perfil
-                               4. Eliminar mi cuenta
-                               4. Salir
+                               
+                               ╭─────────────────╮
+                               │             ⋆｡°✩TECNOSTORE⋆｡°✩             │
+                               │          ─Qué te gustaría hacer?─          │
+                               ├───────────────── ┤
+                               │         1.  Carrito de compras                    │
+                               │         2.  Actualizar mi perfil                    │
+                               │         3. Ver mi perfil                                 │
+                               │         4. Eliminar mi cuenta                      │
+                               │         5. Salir                                               │
+                               │                                                                    │
+                               ├─────────────────┤
+                               │   Ingresa una opción:                             │
+                               ╰─────────────────╯
+                               
                                """);
 
     }
@@ -31,11 +50,20 @@ public class MenuCliente {
      public int opcionGestionPedido() {
 
         return v.validarEntero("""
-                               1. Crear un pedido
-                               2. Actualizar mi pedido
-                               3. Ver mis pedidos
-                               4. Eliminar pedido
-                               5. Salir
+                               ╭─────────────────╮
+                               │             ⋆｡°✩TECNOSTORE⋆｡°✩            │
+                               │          ─Qué te gustaría hacer?─         │
+                               ├─────────────────┤
+                               │         1.  Crear un pedido                         │
+                               │         2.  Actualizar mi pedido                │
+                               │         3. Ver mis pedidos                         │
+                               │         4. Eliminar pedido                          │
+                               │         5. Salir                                               │
+                               │                                                                    │
+                               ├─────────────────┤
+                               │   Ingresa una opción:                             │
+                               ╰─────────────────╯
+                               
                                """);
 
     }

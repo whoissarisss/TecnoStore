@@ -19,9 +19,20 @@ public class MenuIngreso {
     public int escogerPersona() {
 
         return v.validarEntero("""
-                               1. Administrador
-                               2. Cliente
-                               3. Salir.
+                               
+                               ✦ Hola, Quien eres? 
+                               ╭─────────────── ─╮
+                               │               ✦  TECNOSTORE  ✦               │
+                               │               MENU PRINCIPAL♡              │
+                               ├───── ───────────┤
+                               │                                                                 │
+                               │   [1]  Administrador                              │
+                               │   [2]  Cliente                                           │
+                               │   [3]  Salir                                                │
+                               │                                                                 │
+                               │                                                                 │
+                               ╰──────────── ────╯
+                               ♡ Escoge una opción:
                                """);
 
     }

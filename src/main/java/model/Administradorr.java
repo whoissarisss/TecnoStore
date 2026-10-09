@@ -1,11 +1,12 @@
 package model;
 
 public class Administradorr extends Personaa {
+    private final int idAdministrador = 0;
     private String usuario;
     private String contraseña;
 
-    public Administradorr(String usuario, String contraseña, int id, String nombre, String apellido, String identificacion, String email, String Telefono) {
-        super(id, nombre, apellido, identificacion, email, Telefono);
+    public Administradorr(String usuario, String contraseña, int idAdministrador, String nombre, String apellido, String identificacion, String email, String Telefono) {
+        super(idAdministrador, nombre, apellido, identificacion, email, Telefono);
         this.usuario = usuario;
         this.contraseña = contraseña;
     }
@@ -14,6 +15,10 @@ public class Administradorr extends Personaa {
         super(nombre, apellido, identificacion, email, Telefono);
         this.usuario = usuario;
         this.contraseña = contraseña;
+    }
+
+    public int getIdAdministrador() {
+        return idAdministrador;
     }
 
     public String getUsuario() {
