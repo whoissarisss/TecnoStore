@@ -1,8 +1,12 @@
 package view;
+ 
+import view.Validaciones.Entero;
+
 
 public class MenuIngreso {
-    Validaciones v = new Validaciones();
+    Entero v = new Entero();
 
+    /*
     public Producto ingresarProducto() {
         return new Producto(0, v.validarTexto("Ingrese el nombre"),
                 v.validarTexto("Ingrese la descripcion"),
@@ -15,7 +19,8 @@ public class MenuIngreso {
                 v.validarDecimal("Ingrese el monto"),
                 null);
     }
-
+*/
+    
     public int escogerPersona() {
 
         return v.validarEntero("""

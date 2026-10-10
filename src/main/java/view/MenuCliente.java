@@ -1,11 +1,10 @@
 package view;
 
-/**
- *
- * @author saras
- */
+import view.Validaciones.Entero;
+
+
 public class MenuCliente {
-    Validaciones v = new Validaciones();
+  Entero v = new Entero();
      public int opcionTipoLogIn() {
 
         return v.validarEntero("""
@@ -75,8 +74,22 @@ public class MenuCliente {
                                2. Eliminar celular
                                3. Cancelar pedido
                                4. Salir
+                               
+                     ╭─────────────────╮
+                     │             ⋆｡°✩TECNOSTORE⋆｡°✩            │
+                     │          ─Qué te gustaría hacer?─         │
+                     ├─────────────────┤
+                     │         1.  Crear un pedido                         │
+                     │         2.  Actualizar mi pedido                │
+                     │         3. Ver mis pedidos                         │
+                     │         4. Eliminar pedido                          │
+                     │         5. Salir                                               │
+                     │                                                                    │
+                     ├─────────────────┤
+                     │   Ingresa una opción:                             │
+                     ╰─────────────────╯
+                                                              
                                """);
-
     }
      
       public int OpcionActualizarDatosPersonales() {
