@@ -24,21 +24,20 @@ public class MenuIngreso {
     public int escogerPersona() {
 
         return v.validarEntero("""
-                               
-                               ✦ Hola, Quien eres? 
-                               ╭─────────────── ─╮
-                               │               ✦  TECNOSTORE  ✦               │
-                               │               MENU PRINCIPAL♡              │
-                               ├───── ───────────┤
-                               │                                                                 │
-                               │   [1]  Administrador                              │
-                               │   [2]  Cliente                                           │
-                               │   [3]  Salir                                                │
-                               │                                                                 │
-                               │                                                                 │
-                               ╰──────────── ────╯
-                               ♡ Escoge una opción:
-                               """);
+                ╭───────────────────╮
+                │           ⋆｡°✩  T E C N O S T O R E  ✩°｡⋆          │
+                │                ── Menú Principal ──               │
+                ├───────────────────┤
+                │                                                                            │
+                │   1.  Administrador                                          │
+                │   2.  Cliente                                                       │
+                │   3.  Salir                                                            │
+                │                                                                            │
+                ├───────────────────┤
+                │   ▸ ¡Hola! ¿Con quién hablamos hoy?        │
+                │     Ingresa una opción:                                   │
+                ╰───────────────────╯
+                """);
 
     }
 }
