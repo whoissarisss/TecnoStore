@@ -22,22 +22,8 @@ public class MenuIngreso {
 */
     
     public int escogerPersona() {
-
-        return v.validarEntero("""
-                ╭───────────────────╮
-                │           ⋆｡°✩  T E C N O S T O R E  ✩°｡⋆          │
-                │                ── Menú Principal ──               │
-                ├───────────────────┤
-                │                                                                            │
-                │   1.  Administrador                                          │
-                │   2.  Cliente                                                       │
-                │   3.  Salir                                                            │
-                │                                                                            │
-                ├───────────────────┤
-                │   ▸ ¡Hola! ¿Con quién hablamos hoy?        │
-                │     Ingresa una opción:                                   │
-                ╰───────────────────╯
-                """);
-
+        return v.validarEntero(Marco.menu(
+            "Menú Principal", "¡Hola! ¿Con quién\nhablamos hoy?",
+            "Administrador", "Cliente", "Salir"));
     }
 }
