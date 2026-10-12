@@ -1,6 +1,7 @@
 package controller;
 
 import controller.admin.GestionAdministrador;
+import controller.cliente.GestionCuenta;
 import view.MenuIngreso;
 
 public class GestionGeneral {
@@ -13,11 +14,10 @@ public class GestionGeneral {
             op = menuIngreso.escogerPersona();
             switch (op) {
                 case 1 -> new GestionAdministrador().menu();
-                case 2 -> System.out.println("El area de clientes estara disponible pronto.");
+                case 2 -> new GestionCuenta().menu();
                 case 3 -> System.out.println("Gracias por usar TECNOSTORE");
                 default -> System.out.println("Opcion no encontrada!");
             }
         } while (op != 3);
     }
 }
-
