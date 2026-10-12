@@ -52,15 +52,15 @@ public class GestionCelular {
         return Celularr.Gama.values()[op - 1];
     }
 
-    private void agregar() {
-        Marcaa marca = cargarMarca("Escoja el id de la marca");
-        String modelo = texto.validarTexto("Ingrese el modelo");
-        double precio = decimal.validarDecimalPositivo("Ingrese el precio");
-        int stock = rango.validarEnteroRango("Ingrese el stock", 0, 10000);
-        Celularr.SistemaOperativo so = escogerSistema();
-        Celularr.Gama gama = escogerGama();
-        dao.crear(new Celularr(0, stock, modelo, precio, marca, so, gama));
-    }
+   private void agregar() {
+    Marcaa marca = cargarMarca("Escoja el id de la marca");
+    String modelo = texto.validarTexto("Ingrese el modelo");
+    double precio = decimal.validarDecimalPositivo("Ingrese el precio");
+    int stock = rango.validarEnteroRango("Ingrese el stock", 1, 10000);
+    Celularr.SistemaOperativo so = escogerSistema();
+    Celularr.Gama gama = escogerGama();
+    dao.crear(new Celularr(0, stock, modelo, precio, marca, so, gama));
+}
 
     private void listar() {
         var lista = dao.obtenerCelulares();
