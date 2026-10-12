@@ -38,4 +38,10 @@ public class MenuAdministrador {
             "Modelo", "Stock", "Marca", "Sistema Operativo",
             "Gama", "Precio", "Salir"));
     }
+         public int escogerReporte() {
+    return v.validarEntero(Marco.menu(
+        "Reportes y Análisis", "¿Qué reporte deseas ver?",
+        "Celulares con stock bajo", "Top 3 más vendidos", "Ventas totales por mes",
+        "Generar reporte_ventas.txt", "Historial de auditoría", "Salir"));
+}
 }
