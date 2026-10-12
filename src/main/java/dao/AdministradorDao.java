@@ -9,7 +9,7 @@ import model.Administradorr;
 
 public class AdministradorDao {
 
-    Conexion c = new Conexion();
+    Conexion c = Conexion.getInstancia();
     PersonaDao daoP = new PersonaDao();
 
     private static final String SELECT = "select p.id, p.nombre, p.apellido, p.identificacion, "

@@ -9,7 +9,7 @@ import model.Marcaa;
 
 public class MarcaDao {
 
-    Conexion c = new Conexion();
+    Conexion c = Conexion.getInstancia();
     AuditoriaDao audit = new AuditoriaDao();
 
     public void crear(Marcaa marca) {

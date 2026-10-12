@@ -11,7 +11,7 @@ import model.DetalleVentaa;
 
 public class DetalleVentaDao {
 
-    Conexion c = new Conexion();
+    Conexion c = Conexion.getInstancia();
     CelularDao daoC = new CelularDao();
     AuditoriaDao audit = new AuditoriaDao();
 
@@ -114,12 +114,14 @@ public class DetalleVentaDao {
     }
 
     private void recalcularTotal(Connection con, int idVenta) throws SQLException {
-        String sql = "update venta set total = "
-                + "(select coalesce(sum(subtotal), 0) from detalle_venta where id_venta=?) where id=?";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setInt(1, idVenta);
-        ps.setInt(2, idVenta);
-        ps.executeUpdate();
+    // total = subtotal de los detalles + IVA 19%
+    String sql = "update venta set total = round("
+            + "(select coalesce(sum(subtotal), 0) from detalle_venta where id_venta=?) * 1.19, 2) "
+            + "where id=?";
+    PreparedStatement ps = con.prepareStatement(sql);
+    ps.setInt(1, idVenta);
+    ps.setInt(2, idVenta);
+    ps.executeUpdate();
     }
 }
 

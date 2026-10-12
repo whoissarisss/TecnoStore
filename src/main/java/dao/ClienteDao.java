@@ -10,7 +10,7 @@ import model.Clientee;
 
 public class ClienteDao {
 
-    Conexion c = new Conexion();
+    Conexion c = Conexion.getInstancia();
     PersonaDao daoP = new PersonaDao();
     AuditoriaDao audit = new AuditoriaDao();
 
@@ -113,4 +113,19 @@ public class ClienteDao {
         return new Clientee(rs.getInt("id"), rs.getString("nombre"), rs.getString("apellido"),
                 rs.getString("identificacion"), rs.getString("email"), rs.getString("telefono"));
     }
+    
+    public Clientee buscarPorIdentificacion(String identificacion) {
+    try (Connection con = c.conexion()) {
+        PreparedStatement ps = con.prepareStatement(SELECT + " where p.identificacion=?");
+        ps.setString(1, identificacion);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return mapear(rs);
+        }
+    } catch (Exception e) {
+        System.out.println("Error al buscar el cliente: " + e.getMessage());
+    }
+    return null;
+}
+
 }

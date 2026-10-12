@@ -9,7 +9,7 @@ import model.Personaa;
 
 public class PersonaDao {
 
-    Conexion c = new Conexion();
+    Conexion c = Conexion.getInstancia();
 
     int insertar(Connection con, Personaa p) throws SQLException {
         String sql = "insert into persona (nombre, apellido, identificacion, email, telefono) "

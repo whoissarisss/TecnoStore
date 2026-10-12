@@ -11,7 +11,7 @@ import model.Sesion;
 
 public class AuditoriaDao {
 
-    Conexion c = new Conexion();
+   Conexion c = Conexion.getInstancia();
 
     public void registrar(String accion, String entidad, Integer idEntidad, String detalle) {
         try (Connection con = c.conexion()) {

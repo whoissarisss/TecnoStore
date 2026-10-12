@@ -15,7 +15,7 @@ import model.Ventaa;
 
 public class VentaDao {
 
-    Conexion c = new Conexion();
+    Conexion c = Conexion.getInstancia();
     ClienteDao daoCl = new ClienteDao();
     DetalleVentaDao daoD = new DetalleVentaDao();
     AuditoriaDao audit = new AuditoriaDao();

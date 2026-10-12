@@ -10,7 +10,7 @@ import model.Marcaa;
 
 public class CelularDao {
 
-    Conexion c = new Conexion();
+    Conexion c = Conexion.getInstancia();
     MarcaDao daoM = new MarcaDao();
     AuditoriaDao audit = new AuditoriaDao();
 
