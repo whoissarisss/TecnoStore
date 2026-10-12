@@ -13,14 +13,11 @@ import java.sql.SQLException;
  * @author saras
  */
 public class Conexion {
-    public Connection conectar(){
+    public Connection conexion() {
         Connection c = null;
-        
-        try{
-            c= DriverManager.getConnection("jdbc:mysql://localhost:3306/tecnoStore_SaraRamirez", "root", "Sp210608*");
-            
-            System.out.println("Conexion con la base de datos ha sido establecida exitosamente");
-        } catch (SQLException e){
+        try {
+            c = DriverManager.getConnection("jdbc:mysql://localhost:3306/tecnostore", "root", "Sp210608*");
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return c;

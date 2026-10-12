@@ -1,55 +1,35 @@
 package model;
 
 public class DetalleVentaa {
+
     private int id;
     private Celularr celular;
     private int cantidad;
-    private double precio;
+    private double subtotal;
 
-    public DetalleVentaa(int id, Celularr celular, int cantidad, double precio) {
+
+    public DetalleVentaa(Celularr celular, int cantidad) {
+        this.celular = celular;
+        this.cantidad = cantidad;
+        this.subtotal = celular.getPrecio() * cantidad;
+    }
+
+    public DetalleVentaa(int id, Celularr celular, int cantidad, double subtotal) {
         this.id = id;
         this.celular = celular;
         this.cantidad = cantidad;
-        this.precio = precio;
+        this.subtotal = subtotal;
     }
 
-    public DetalleVentaa(Celularr celular, int cantidad, double precio) {
-        this.celular = celular;
-        this.cantidad = cantidad;
-        this.precio = precio;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public Celularr getCelular() { return celular; }
+    public int getCantidad() { return cantidad; }
+    public double getSubtotal() { return subtotal; }
 
-    public int getId() {
-        return id;
+    @Override
+    public String toString() {
+        return String.format(" [%d] %dx %s %s ... $%,.2f", id, cantidad,
+                celular.getMarca().getNombre(), celular.getModelo(), subtotal);
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Celularr getCelular() {
-        return celular;
-    }
-
-    public void setCelular(Celularr celular) {
-        this.celular = celular;
-    }
-
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
-    }
-    
-    
 }

@@ -1,94 +1,68 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Ventaa {
-   private int idVenta;
-   private Clientee cliente;
-   private LocalDateTime fecha;
-   private Estado estado;
-   private double subtotal;
-   private double total;
-   
-   private List<DetalleVentaa> detalles = new ArrayList<>();
 
-    public Ventaa(int idVenta, Clientee cliente, LocalDateTime fecha, Estado estado, double subtotal, double total) {
-        this.idVenta = idVenta;
+   
+    public enum Estado {
+        PENDIENTE, PAGADA, CANCELADA
+    }
+
+    private int id;
+    private Clientee cliente;
+    private LocalDateTime fecha;
+    private Estado estado;
+    private List<DetalleVentaa> detalles = new ArrayList<>();
+
+
+    public Ventaa(Clientee cliente) {
+        this.cliente = cliente;
+        this.fecha = LocalDateTime.now();
+        this.estado = Estado.PENDIENTE;
+    }
+
+    public Ventaa(int id, Clientee cliente, LocalDateTime fecha, Estado estado) {
+        this.id = id;
         this.cliente = cliente;
         this.fecha = fecha;
         this.estado = estado;
-        this.subtotal = subtotal;
-        this.total = total;
     }
 
-    public Ventaa(Clientee cliente, LocalDateTime fecha, Estado estado, double subtotal, double total) {
-        this.cliente = cliente;
-        this.fecha = fecha;
-        this.estado = estado;
-        this.subtotal = subtotal;
-        this.total = total;
-    }
-
-   public enum Estado{
-       PENDIENTE, ENVIADO, CANCELADO
-   }
-   
-   public void agregarDetalle(DetalleVentaa detalle){
+    public void agregarDetalle(DetalleVentaa detalle) {
         detalles.add(detalle);
-   }
-
-    public int getIdVenta() {
-        return idVenta;
-    }
-
-    public void setIdVenta(int idVenta) {
-        this.idVenta = idVenta;
-    }
-
-    public Clientee getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Clientee cliente) {
-        this.cliente = cliente;
-    }
-
-    public LocalDateTime getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDateTime fecha) {
-        this.fecha = fecha;
-    }
-
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
-    public double getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(double subtotal) {
-        this.subtotal = subtotal;
     }
 
     public double getTotal() {
-        return total;
+        return detalles.stream().mapToDouble(DetalleVentaa::getSubtotal).sum();
     }
 
-    public void setTotal(double total) {
-        this.total = total;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public Clientee getCliente() { return cliente; }
+    public LocalDateTime getFecha() { return fecha; }
+    public Estado getEstado() { return estado; }
+    public void setEstado(Estado estado) { this.estado = estado; }
+    public List<DetalleVentaa> getDetalles() { return detalles; }
 
-    public List<DetalleVentaa> getDetalles() {
-        return detalles;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n=========================================\n");
+        sb.append(String.format(" Venta #%d  [%s]%n", id, estado));
+        sb.append(String.format(" Cliente: %s %s%n", cliente.getNombre(), cliente.getApellido()));
+        sb.append(String.format(" Fecha:   %s%n",
+                fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))));
+        sb.append("-----------------------------------------\n");
+        for (DetalleVentaa d : detalles) {
+            sb.append(d).append("\n");
+        }
+        sb.append("-----------------------------------------\n");
+        sb.append(String.format(" TOTAL: $%,.2f%n", getTotal()));
+        sb.append("=========================================");
+        return sb.toString();
     }
-   
 }
