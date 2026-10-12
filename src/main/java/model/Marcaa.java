@@ -27,4 +27,8 @@ public class Marcaa {
         this.nombre = nombre;
     }
 
+    @Override
+public String toString() {
+    return id + ". " + nombre;
+}
 }

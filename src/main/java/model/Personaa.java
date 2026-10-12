@@ -1,28 +1,30 @@
 package model;
 
+import view.Marco;
+
 public class Personaa {
     private int id;
     private String nombre;
     private String apellido;
     private String identificacion;
     private String email;
-    private String Telefono;
+    private String telefono;
 
-    public Personaa(int id, String nombre, String apellido, String identificacion, String email, String Telefono) {
+    public Personaa(int id, String nombre, String apellido, String identificacion, String email, String telefono) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.identificacion = identificacion;
         this.email = email;
-        this.Telefono = Telefono;
+        this.telefono = telefono;
     }
 
-    public Personaa(String nombre, String apellido, String identificacion, String email, String Telefono) {
+    public Personaa(String nombre, String apellido, String identificacion, String email, String telefono) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.identificacion = identificacion;
         this.email = email;
-        this.Telefono = Telefono;
+        this.telefono = telefono;
     }
     
     
@@ -68,12 +70,28 @@ public class Personaa {
     }
 
     public String getTelefono() {
-        return Telefono;
+        return telefono;
     }
 
-    public void setTelefono(String Telefono) {
-        this.Telefono = Telefono;
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
+  protected String titulo() {
+    return "PERSONA";
+}
 
-    
+protected String[][] campos() {
+    return new String[][]{
+        Marco.fila("ID", id),
+        Marco.fila("Name", nombre + " " + apellido),
+        Marco.fila("Doc", identificacion),
+        Marco.fila("Email", email),
+        Marco.fila("Phone", telefono)
+    };
+}
+
+@Override
+public String toString() {
+    return Marco.tarjeta(titulo(), campos());
+}
 }

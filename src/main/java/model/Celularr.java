@@ -1,5 +1,7 @@
 package model;
 
+import view.Marco;
+
 public class Celularr {
    private int id;
    private int stock;
@@ -92,5 +94,17 @@ public class Celularr {
     public void setGama(Gama gama) {
         this.gama = gama;
     }
+    
+    @Override
+public String toString() {
+    return Marco.tarjeta("CELL PHONE",
+            Marco.fila("ID", id),
+            Marco.fila("Brand", marca.getNombre()),
+            Marco.fila("Model", modelo),
+            Marco.fila("Price", String.format("$%,.2f", precio)),
+            Marco.fila("Stock", stock),
+            Marco.fila("OS", sistemaOperativo),
+            Marco.fila("Range", gama));
+}
 
 }

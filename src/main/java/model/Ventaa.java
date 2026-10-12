@@ -4,10 +4,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import view.Marco;
 
 public class Ventaa {
 
-   
+    public static final double IVA = 0.19;
+
+    // El orden se usa en GestionVenta (1. PENDIENTE, 2. PAGADA, 3. CANCELADA)
     public enum Estado {
         PENDIENTE, PAGADA, CANCELADA
     }
@@ -18,13 +21,14 @@ public class Ventaa {
     private Estado estado;
     private List<DetalleVentaa> detalles = new ArrayList<>();
 
-
+    // Venta nueva (carrito)
     public Ventaa(Clientee cliente) {
         this.cliente = cliente;
         this.fecha = LocalDateTime.now();
         this.estado = Estado.PENDIENTE;
     }
 
+    // Venta leida de la BD
     public Ventaa(int id, Clientee cliente, LocalDateTime fecha, Estado estado) {
         this.id = id;
         this.cliente = cliente;
@@ -36,8 +40,21 @@ public class Ventaa {
         detalles.add(detalle);
     }
 
+    public double getSubtotal() {
+        return redondear(detalles.stream().mapToDouble(DetalleVentaa::getSubtotal).sum());
+    }
+
+    public double getIva() {
+        return redondear(getSubtotal() * IVA);
+    }
+
+    // Total final, con IVA incluido
     public double getTotal() {
-        return detalles.stream().mapToDouble(DetalleVentaa::getSubtotal).sum();
+        return redondear(getSubtotal() + getIva());
+    }
+
+    private static double redondear(double valor) {
+        return Math.round(valor * 100.0) / 100.0;
     }
 
     public int getId() { return id; }
@@ -49,20 +66,25 @@ public class Ventaa {
     public List<DetalleVentaa> getDetalles() { return detalles; }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n=========================================\n");
-        sb.append(String.format(" Venta #%d  [%s]%n", id, estado));
-        sb.append(String.format(" Cliente: %s %s%n", cliente.getNombre(), cliente.getApellido()));
-        sb.append(String.format(" Fecha:   %s%n",
-                fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))));
-        sb.append("-----------------------------------------\n");
-        for (DetalleVentaa d : detalles) {
-            sb.append(d).append("\n");
-        }
-        sb.append("-----------------------------------------\n");
-        sb.append(String.format(" TOTAL: $%,.2f%n", getTotal()));
-        sb.append("=========================================");
-        return sb.toString();
+public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(Marco.encabezado("VENTA #" + id));
+    sb.append(Marco.vacia());
+    sb.append(Marco.linea("   * Estado  : " + estado));
+    sb.append(Marco.linea("   * Cliente : " + cliente.getNombre() + " " + cliente.getApellido()));
+    sb.append(Marco.linea("   * Fecha   : "
+            + fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))));
+    sb.append(Marco.vacia());
+    sb.append(Marco.separador());
+    for (DetalleVentaa d : detalles) {
+        sb.append(Marco.par(d.getCantidad() + "x " + d.getCelular().getModelo(),
+                String.format("$%,.2f", d.getSubtotal())));
     }
+    sb.append(Marco.separador());
+    sb.append(Marco.par("Subtotal", String.format("$%,.2f", getSubtotal())));
+    sb.append(Marco.par("IVA (19%)", String.format("$%,.2f", getIva())));
+    sb.append(Marco.par("TOTAL", String.format("$%,.2f", getTotal())));
+    sb.append(Marco.cierre());
+    return sb.toString();
+}
 }
