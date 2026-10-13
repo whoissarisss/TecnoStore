@@ -138,20 +138,32 @@ public class GestionPedido {
         }
         int op = menuCliente.OpcionActualizarPedido();
         switch (op) {
+           
             case 1 -> {
                 DetalleVentaa d = pedirDetalle(venta);
-                if (d != null) {
-                    daoD.agregar(venta.getId(), d);
-                }
+                 if (d != null) {
+                    venta.agregarDetalle(d);
+                    dao.actualizar(venta);
+                  }
             }
+
+            
             case 2 -> {
-                if (venta.getDetalles().size() == 1) {
-                    System.out.println("El pedido quedaria vacio, use la opcion Cancelar pedido");
-                } else {
-                    int idDetalle = entero.validarEntero("Ingrese el numero entre corchetes [ ] del celular a quitar");
-                    daoD.eliminar(venta.getId(), idDetalle);
-                }
-            }
+                 if (venta.getDetalles().size() == 1) {
+                      System.out.println("El pedido quedaria vacio, use la opcion Cancelar pedido");
+                 } else {
+                        int numero = entero.validarEntero("Ingrese el numero entre corchetes [ ] del celular a quitar");
+                        
+                            if (numero >= 1 && numero <= venta.getDetalles().size()) {
+                                   venta.getDetalles().remove(numero - 1);
+                                   dao.actualizar(venta);
+                                   System.out.println("Detalle eliminado correctamente!");
+                            } else {
+                                   System.out.println("Numero de detalle no valido.");
+                    }
+    }
+}
+
             case 3 -> {
                 if (confirmacion.validarConfirmacion("¿Desea cancelar el pedido?")) {
                     dao.actualizarEstado(venta.getId(), Ventaa.Estado.CANCELADA);

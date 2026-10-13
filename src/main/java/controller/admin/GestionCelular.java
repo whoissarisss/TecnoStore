@@ -25,18 +25,24 @@ public class GestionCelular {
     DecimalPositivo decimal = new DecimalPositivo();
     Confirmacion confirmacion = new Confirmacion();
 
+    
     private Marcaa cargarMarca(String mensaje) {
         var marcas = daoM.obtenerTodos();
         if (marcas.isEmpty()) {
             System.out.println("No hay marcas registradas, vamos a crear la primera.");
-            daoM.insertarMarca(new Marcaa(0, letras.validarSoloLetras("Ingrese el nombre de la marca")));
+            daoM.insertarMarca(
+                new Marcaa(0, letras.validarSoloLetras("Ingrese el nombre de la marca"))
+            );
         }
         for (Marcaa m : daoM.obtenerTodos()) {
             System.out.println(m.getId() + ". " + m.getNombre());
         }
-        Marcaa marca = daoM.insertarMarca(entero.validarEntero(mensaje));
+        Marcaa marca = daoM.obtenerPorId(entero.validarEntero(mensaje));
         while (marca == null) {
-            marca = daoM.obtenerPorId(entero.validarEntero("Error, intente nuevamente!"));
+            System.out.println("No existe una marca con ese ID.");
+            marca = daoM.obtenerPorId(
+                entero.validarEntero("Ingrese nuevamente el ID de la marca")
+            );
         }
         return marca;
     }

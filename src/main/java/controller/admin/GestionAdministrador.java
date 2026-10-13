@@ -37,7 +37,7 @@ public class GestionAdministrador {
                 case 1 -> new GestionCliente().menu();
                 case 2 -> new GestionCelular().menu();
                 case 3 -> new GestionVenta().menu();
-                case 4 -> System.out.println("Disponible pronto...");
+                case 4 -> new GestionReporte().menu();
                 case 5 -> System.out.println("Cerrando sesion...");
                 default -> System.out.println("Opcion no encontrada!");
             }
