@@ -1,16 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.s2.tecnostore;
 
-/**
- *
- * @author saras
- */
 public class TecnoStore {
-
     public static void main(String[] args) {
-        new controller.GestionGeneral().menuGeneral();
-    }
+    System.setOut(new java.io.PrintStream(System.out, true, java.nio.charset.StandardCharsets.UTF_8));
+    new controller.GestionGeneral().menuGeneral();
+}
 }
