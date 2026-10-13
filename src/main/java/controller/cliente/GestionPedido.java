@@ -27,10 +27,9 @@ public class GestionPedido {
         this.cliente = cliente;
     }
 
-    // Muestra solo los celulares con stock. Devuelve false si no hay ninguno.
     private boolean mostrarCatalogo() {
         boolean hay = false;
-        for (Celularr cel : daoC.obtenerCelulares()) {
+        for (Celularr cel : daoC.obtenerTodos()) {
             if (cel.getStock() > 0) {
                 System.out.println(String.format("%d. %s %s | %s | %s | $%,.2f | quedan %d",
                         cel.getId(), cel.getMarca().getNombre(), cel.getModelo(),
@@ -54,12 +53,12 @@ public class GestionPedido {
         return total;
     }
 
-    // Pide celular y cantidad, descontando lo que ya hay en el pedido. Devuelve null si no se pudo.
+  
     private DetalleVentaa pedirDetalle(Ventaa venta) {
         if (!mostrarCatalogo()) {
             return null;
         }
-        Celularr cel = daoC.buscar(entero.validarEntero("Ingrese el id del celular"));
+        Celularr cel = daoC.obtenerPorId(entero.validarEntero("Ingrese el id del celular"));
         if (cel == null) {
             System.out.println("No existe dicho celular");
             return null;
@@ -91,7 +90,7 @@ public class GestionPedido {
         }
         System.out.println(venta);
         if (confirmacion.validarConfirmacion("¿Desea confirmar el pedido?")) {
-            dao.crear(venta);
+            dao.insertar(venta);
             System.out.println("Su pedido queda PENDIENTE hasta que el administrador confirme el pago.");
         } else {
             System.out.println("Pedido descartado");
@@ -99,7 +98,7 @@ public class GestionPedido {
     }
 
     private void ver() {
-        var lista = dao.listarPorCliente(cliente.getId());
+        var lista = dao.obtenerPorCliente(cliente.getId());
         if (lista.isEmpty()) {
             System.out.println("No tiene pedidos registrados.");
         }
@@ -108,10 +107,9 @@ public class GestionPedido {
         }
     }
 
-    // Muestra los pedidos del cliente y devuelve el que escoja (o null)
     private Ventaa escogerPedido(String mensaje, boolean soloPendientes) {
         boolean hay = false;
-        for (Ventaa v : dao.listarPorCliente(cliente.getId())) {
+        for (Ventaa v : dao.obtenerPorCliente(cliente.getId())) {
             if (!soloPendientes || v.getEstado() == Ventaa.Estado.PENDIENTE) {
                 System.out.println(v);
                 hay = true;
@@ -121,7 +119,7 @@ public class GestionPedido {
             System.out.println(soloPendientes ? "No tiene pedidos pendientes." : "No tiene pedidos registrados.");
             return null;
         }
-        Ventaa venta = dao.buscar(entero.validarEntero(mensaje));
+        Ventaa venta = dao.obtenerPorId(entero.validarEntero(mensaje));
         if (venta == null || venta.getCliente().getId() != cliente.getId()) {
             System.out.println("No existe dicho pedido");
             return null;

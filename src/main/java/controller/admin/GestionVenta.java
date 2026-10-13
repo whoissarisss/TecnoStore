@@ -16,7 +16,7 @@ public class GestionVenta {
     Confirmacion confirmacion = new Confirmacion();
 
     private void listar() {
-        var lista = dao.obtenerVentas();
+        var lista = dao.obtenerTodos();
         if (lista.isEmpty()) {
             System.out.println("No hay ventas registradas.");
         }
@@ -28,11 +28,10 @@ public class GestionVenta {
     private void actualizarEstado() {
         listar();
         int id = entero.validarEntero("Ingrese el id de la venta");
-        if (dao.buscar(id) == null) {
+        if (dao.obtenerPorId(id) == null) {
             System.out.println("No existe dicha entidad");
             return;
         }
-        // El orden debe ser el mismo del enum Ventaa.Estado
         int op = rango.validarEnteroRango("Nuevo estado: 1. PENDIENTE  2. PAGADA  3. CANCELADA", 1, 3);
         dao.actualizarEstado(id, Ventaa.Estado.values()[op - 1]);
     }

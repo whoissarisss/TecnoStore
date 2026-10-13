@@ -26,22 +26,21 @@ public class GestionCelular {
     Confirmacion confirmacion = new Confirmacion();
 
     private Marcaa cargarMarca(String mensaje) {
-        var marcas = daoM.obtenerMarcas();
+        var marcas = daoM.obtenerTodos();
         if (marcas.isEmpty()) {
             System.out.println("No hay marcas registradas, vamos a crear la primera.");
-            daoM.crear(new Marcaa(0, letras.validarSoloLetras("Ingrese el nombre de la marca")));
+            daoM.insertarMarca(new Marcaa(0, letras.validarSoloLetras("Ingrese el nombre de la marca")));
         }
-        for (Marcaa m : daoM.obtenerMarcas()) {
+        for (Marcaa m : daoM.obtenerTodos()) {
             System.out.println(m.getId() + ". " + m.getNombre());
         }
-        Marcaa marca = daoM.buscar(entero.validarEntero(mensaje));
+        Marcaa marca = daoM.insertarMarca(entero.validarEntero(mensaje));
         while (marca == null) {
-            marca = daoM.buscar(entero.validarEntero("Error, intente nuevamente!"));
+            marca = daoM.obtenerPorId(entero.validarEntero("Error, intente nuevamente!"));
         }
         return marca;
     }
 
-    // El orden de las opciones debe ser el mismo del enum
     private Celularr.SistemaOperativo escogerSistema() {
         int op = rango.validarEnteroRango("Sistema operativo: 1. IOS  2. ANDROID", 1, 2);
         return Celularr.SistemaOperativo.values()[op - 1];
@@ -59,11 +58,11 @@ public class GestionCelular {
     int stock = rango.validarEnteroRango("Ingrese el stock", 1, 10000);
     Celularr.SistemaOperativo so = escogerSistema();
     Celularr.Gama gama = escogerGama();
-    dao.crear(new Celularr(0, stock, modelo, precio, marca, so, gama));
+    dao.insertar(new Celularr(0, stock, modelo, precio, marca, so, gama));
 }
 
     private void listar() {
-        var lista = dao.obtenerCelulares();
+        var lista = dao.obtenerTodos();
         if (lista.isEmpty()) {
             System.out.println("No hay celulares registrados.");
         }
@@ -99,7 +98,7 @@ public class GestionCelular {
     private void actualizar() {
         listar();
         int id = entero.validarEntero("Ingrese el id a actualizar");
-        Celularr cel = dao.buscar(id);
+        Celularr cel = dao.obtenerPorId(id);
         if (cel == null) {
             System.out.println("No existe dicha entidad");
         } else {

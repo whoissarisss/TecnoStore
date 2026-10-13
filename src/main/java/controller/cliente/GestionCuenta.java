@@ -1,10 +1,8 @@
 package controller.cliente;
 
-import dao.AuditoriaDao;
 import dao.ClienteDao;
 import dao.PersonaDao;
 import model.Clientee;
-import model.Sesion;
 import view.MenuCliente;
 import view.Validaciones.Confirmacion;
 import view.Validaciones.Correo;
@@ -17,7 +15,6 @@ public class GestionCuenta {
 
     ClienteDao dao = new ClienteDao();
     PersonaDao daoP = new PersonaDao();
-    AuditoriaDao audit = new AuditoriaDao();
     MenuCliente menuCliente = new MenuCliente();
     SoloLetras letras = new SoloLetras();
     Documento documento = new Documento();
@@ -40,8 +37,8 @@ public class GestionCuenta {
         String apellido = letras.validarSoloLetras("Ingrese su apellido");
         String tel = telefono.validarTelefono("Ingrese su teléfono");
 
-        dao.crear(new Clientee(nombre, apellido, identificacion, email, tel));
-        if (dao.buscarPorIdentificacion(identificacion) != null) {
+        dao.insertar(new Clientee(nombre, apellido, identificacion, email, tel));
+        if (dao.obtenerPorIdentificacion(identificacion) != null) {
             System.out.println("Ya puede iniciar sesion con su identificacion y su correo.");
         }
     }
@@ -50,14 +47,11 @@ public class GestionCuenta {
         for (int intento = 1; intento <= 3; intento++) {
             String identificacion = documento.validarDocumento("Ingrese su identificación");
             String email = correo.validarCorreo("Ingrese su correo");
-            Clientee cl = dao.buscarPorIdentificacion(identificacion);
+            Clientee cl = dao.obtenerPorIdentificacion(identificacion);
             if (cl != null && cl.getEmail() != null && cl.getEmail().equalsIgnoreCase(email)) {
-                Sesion.usuario = "cliente-" + cl.getIdentificacion();
-                audit.registrar("LOGIN", "sesion", cl.getId(), null);
                 System.out.println("Bienvenid@, " + cl.getNombre() + "!");
                 return cl;
             }
-            audit.registrar("LOGIN_FALLIDO", "sesion", null, "documento: " + identificacion);
             System.out.println("Identificacion o correo incorrectos (intento " + intento + " de 3)");
         }
         return null;
@@ -99,11 +93,9 @@ public class GestionCuenta {
         }
         if (cancelar == false) {
             dao.actualizar(cl);
-            Sesion.usuario = "cliente-" + cl.getIdentificacion();
         }
     }
 
-    // Menu del cliente que ya inicio sesion
     private void panel(Clientee cl) {
         boolean cuentaEliminada = false;
         int op;
@@ -116,18 +108,16 @@ public class GestionCuenta {
                 case 4 -> {
                     if (confirmacion.validarConfirmacion("¿Seguro que desea eliminar su cuenta?")) {
                         dao.eliminar(cl.getId());
-                        cuentaEliminada = dao.buscar(cl.getId()) == null;
+                        cuentaEliminada = dao.obtenerPorId(cl.getId()) == null;
                     }
                 }
                 case 5 -> System.out.println("Cerrando sesion...");
                 default -> System.out.println("Opcion no encontrada!");
             }
         } while (op != 5 && !cuentaEliminada);
-        audit.registrar("LOGOUT", "sesion", null, null);
-        Sesion.usuario = "sistema";
     }
 
-    // Punto de entrada: Registrarse / Iniciar sesion / Salir
+ 
     public void menu() {
         int op;
         do {

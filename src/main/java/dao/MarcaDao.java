@@ -24,18 +24,14 @@ public class MarcaDao {
     }
 
   
-    public boolean insertar(Marcaa marca) {
+    public boolean insertarMarca(Marcaa marca) {
         String sql = "INSERT INTO marca (nombre) VALUES (?)";
-
         try (Connection c = conexion.conexion();
              PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
             ps.setString(1, marca.getNombre());
-
             if (ps.executeUpdate() == 0) {
                 return false;
             }
-
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
                     marca.setId(keys.getInt(1));

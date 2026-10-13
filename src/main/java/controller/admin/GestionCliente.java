@@ -14,7 +14,7 @@ public class GestionCliente {
     Confirmacion confirmacion = new Confirmacion();
 
     private void listar() {
-        var lista = dao.obtenerClientes();
+        var lista = dao.obtenerTodos();
         if (lista.isEmpty()) {
             System.out.println("No hay clientes registrados.");
         }

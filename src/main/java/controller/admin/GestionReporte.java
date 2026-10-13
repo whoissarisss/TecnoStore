@@ -1,6 +1,5 @@
 package controller.admin;
 
-import dao.AuditoriaDao;
 import dao.CelularDao;
 import dao.VentaDao;
 import java.io.BufferedWriter;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import model.Auditoria;
 import model.Celularr;
 import model.DetalleVentaa;
 import model.Ventaa;
@@ -31,18 +29,16 @@ public class GestionReporte {
 
     CelularDao daoC = new CelularDao();
     VentaDao daoV = new VentaDao();
-    AuditoriaDao daoA = new AuditoriaDao();
     MenuAdministrador menuAdmin = new MenuAdministrador();
 
-    // Solo las ventas pagadas cuentan como ventas reales
     private List<Ventaa> ventasPagadas() {
-        return daoV.obtenerVentas().stream()
+        return daoV.obtenerTodos().stream()
                 .filter(v -> v.getEstado() == Ventaa.Estado.PAGADA)
                 .collect(Collectors.toList());
     }
 
     private void stockBajo() {
-        List<Celularr> bajos = daoC.obtenerCelulares().stream()
+        List<Celularr> bajos = daoC.obtenerTodos().stream()
                 .filter(c -> c.getStock() < STOCK_BAJO)
                 .sorted(Comparator.comparingInt(Celularr::getStock))
                 .collect(Collectors.toList());
@@ -59,7 +55,6 @@ public class GestionReporte {
     }
 
     private void masVendidos() {
-        // Une los detalles de todas las ventas pagadas y suma las unidades por celular
         Map<String, Integer> unidades = ventasPagadas().stream()
                 .flatMap(v -> v.getDetalles().stream())
                 .collect(Collectors.groupingBy(
@@ -96,9 +91,8 @@ public class GestionReporte {
                 System.out.printf("%-8s | %6d | $%,17.2f%n", mes.format(formato), est.getCount(), est.getSum()));
     }
 
-    // Escribe el resumen de todas las ventas en un archivo de texto
     private void generarArchivo() {
-        List<Ventaa> ventas = daoV.obtenerVentas().stream()
+        List<Ventaa> ventas = daoV.obtenerTodos().stream()
                 .sorted(Comparator.comparingInt(Ventaa::getId))
                 .collect(Collectors.toList());
         if (ventas.isEmpty()) {
@@ -142,18 +136,7 @@ public class GestionReporte {
         System.out.println("Reporte generado en: " + ruta.toAbsolutePath());
     }
 
-    private void auditoria() {
-        List<Auditoria> lista = daoA.obtenerRegistros();
-        if (lista.isEmpty()) {
-            System.out.println("No hay movimientos registrados.");
-            return;
-        }
-        System.out.println("\n--- Ultimos movimientos ---");
-        for (Auditoria a : lista) {
-            System.out.println(a);
-        }
-    }
-
+  
     public void menu() {
         int op;
         do {
@@ -163,10 +146,9 @@ public class GestionReporte {
                 case 2 -> masVendidos();
                 case 3 -> ventasPorMes();
                 case 4 -> generarArchivo();
-                case 5 -> auditoria();
-                case 6 -> System.out.println("Saliendo...");
+                case 5 -> System.out.println("Saliendo...");
                 default -> System.out.println("Opcion no encontrada!");
             }
-        } while (op != 6);
+        } while (op != 5);
     }
 }
