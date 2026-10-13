@@ -21,11 +21,25 @@ public class DetalleVentaa {
         this.subtotal = subtotal;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public Celularr getCelular() { return celular; }
-    public int getCantidad() { return cantidad; }
-    public double getSubtotal() { return subtotal; }
+    public int getId() { 
+        return id; 
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public Celularr getCelular() {
+        return celular; 
+    }
+    
+    public int getCantidad() {
+        return cantidad;
+    }
+    
+    public double getSubtotal() {
+        return subtotal; 
+    }
 
     @Override
     public String toString() {

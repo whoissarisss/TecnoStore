@@ -7,55 +7,110 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import model.Personaa;
 
+
 public class PersonaDao {
 
-    Conexion c = Conexion.getInstancia();
+    private final Conexion conexion = new Conexion();
+ 
 
-    int insertar(Connection con, Personaa p) throws SQLException {
-        String sql = "insert into persona (nombre, apellido, identificacion, email, telefono) "
-                + "values (?,?,?,?,?)";
-        PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        ps.setString(1, p.getNombre());
-        ps.setString(2, p.getApellido());
-        ps.setString(3, p.getIdentificacion());
-        ps.setString(4, p.getEmail());
-        ps.setString(5, p.getTelefono());
-        ps.executeUpdate();
-        ResultSet rs = ps.getGeneratedKeys();
-        if (rs.next()) {
-            p.setId(rs.getInt(1));
-            return p.getId();
+    public boolean insertar(Connection c, Personaa p) throws SQLException {
+        String sql = """
+                INSERT INTO persona (nombre, apellido, identificacion, email, telefono)
+                VALUES (?, ?, ?, ?, ?)
+                """;
+
+        try (PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, p.getNombre());
+            ps.setString(2, p.getApellido());
+            ps.setString(3, p.getIdentificacion());
+            ps.setString(4, p.getEmail());
+            ps.setString(5, p.getTelefono());
+
+            if (ps.executeUpdate() == 0) {
+                return false;
+            }
+
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    p.setId(keys.getInt(1));
+                    return true;
+                }
+            }
         }
-        throw new SQLException("No se pudo obtener el id de la persona");
+        return false;
     }
 
-    void actualizar(Connection con, Personaa p) throws SQLException {
-        String sql = "update persona set nombre=?, apellido=?, identificacion=?, email=?, telefono=? where id=?";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, p.getNombre());
-        ps.setString(2, p.getApellido());
-        ps.setString(3, p.getIdentificacion());
-        ps.setString(4, p.getEmail());
-        ps.setString(5, p.getTelefono());
-        ps.setInt(6, p.getId());
-        ps.executeUpdate();
+ 
+
+    public boolean actualizar(Personaa p) {
+        String sql = """
+                UPDATE persona SET nombre = ?, apellido = ?, identificacion = ?,
+                                   email = ?, telefono = ?
+                WHERE id = ?
+                """;
+
+        try (Connection c = conexion.conexion();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setString(1, p.getNombre());
+            ps.setString(2, p.getApellido());
+            ps.setString(3, p.getIdentificacion());
+            ps.setString(4, p.getEmail());
+            ps.setString(5, p.getTelefono());
+            ps.setInt(6, p.getId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar persona: " + e.getMessage());
+        }
+        return false;
+    }
+
+ 
+    public boolean eliminar(int id) {
+        String sql = "DELETE FROM persona WHERE id = ?";
+
+        try (Connection c = conexion.conexion();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar persona: " + e.getMessage());
+        }
+        return false;
+    }
+
+
+    public boolean existeEmail(String email) {
+        return existe("SELECT 1 FROM persona WHERE email = ?", email);
     }
 
     public boolean existeIdentificacion(String identificacion) {
-        return existe("select 1 from persona where identificacion=? limit 1", identificacion);
+        return existe("SELECT 1 FROM persona WHERE identificacion = ?", identificacion);
     }
 
-    public boolean existeEmail(String email) {
-        return existe("select 1 from persona where email=? limit 1", email);
+
+    public boolean existeEmailDeOtra(String email, int id) {
+        return existe("SELECT 1 FROM persona WHERE email = ? AND id <> ?", email, id);
     }
 
-    private boolean existe(String sql, String valor) {
-        try (Connection con = c.conexion()) {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, valor);
-            return ps.executeQuery().next();
-        } catch (Exception e) {
-            System.out.println("Error al validar: " + e.getMessage());
+ 
+    public boolean existeIdentificacionDeOtra(String identificacion, int id) {
+        return existe("SELECT 1 FROM persona WHERE identificacion = ? AND id <> ?", identificacion, id);
+    }
+
+    private boolean existe(String sql, Object... parametros) {
+        try (Connection c = conexion.conexion();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            for (int i = 0; i < parametros.length; i++) {
+                ps.setObject(i + 1, parametros[i]);
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al validar datos: " + e.getMessage());
         }
         return false;
     }

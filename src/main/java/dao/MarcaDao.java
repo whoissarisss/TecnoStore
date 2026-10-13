@@ -1,54 +1,87 @@
 package dao;
 
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import model.Marcaa;
 
 public class MarcaDao {
 
-    Conexion c = Conexion.getInstancia();
-    AuditoriaDao audit = new AuditoriaDao();
+    private final Conexion conexion = new Conexion();
 
-    public void crear(Marcaa marca) {
-        try (Connection con = c.conexion()) {
-            PreparedStatement ps = con.prepareStatement("insert into marca (nombre) values (?)");
+    private static final String SELECT_BASE = """
+            SELECT id, nombre
+            FROM marca
+            """;
+
+    private Marcaa mapear(ResultSet rs) throws SQLException {
+        return new Marcaa(rs.getInt("id"), rs.getString("nombre"));
+    }
+
+  
+    public boolean insertar(Marcaa marca) {
+        String sql = "INSERT INTO marca (nombre) VALUES (?)";
+
+        try (Connection c = conexion.conexion();
+             PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             ps.setString(1, marca.getNombre());
-            ps.executeUpdate();
-            System.out.println("Marca creada correctamente!");
-            audit.registrar("CREAR", "marca", null, marca.getNombre());
-        } catch (Exception e) {
-            System.out.println("Error en el ingreso de datos: " + e.getMessage());
-        }
-    }
 
-    public List<Marcaa> obtenerMarcas() {
-        List<Marcaa> lista = new ArrayList<>();
-        try (Connection con = c.conexion()) {
-            PreparedStatement ps = con.prepareStatement("select id, nombre from marca order by nombre");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                lista.add(new Marcaa(rs.getInt("id"), rs.getString("nombre")));
+            if (ps.executeUpdate() == 0) {
+                return false;
             }
-        } catch (Exception e) {
-            System.out.println("Error al listar marcas: " + e.getMessage());
+
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    marca.setId(keys.getInt(1));
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Error al insertar marca: " + e.getMessage());
         }
-        return lista;
+        return false;
     }
 
-    public Marcaa buscar(int id) {
-        try (Connection con = c.conexion()) {
-            PreparedStatement ps = con.prepareStatement("select id, nombre from marca where id=?");
+  
+    public Marcaa obtenerPorId(int id) {
+        String sql = SELECT_BASE + " WHERE id = ?";
+
+        try (Connection c = conexion.conexion();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return new Marcaa(rs.getInt("id"), rs.getString("nombre"));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapear(rs);
+                }
             }
-        } catch (Exception e) {
-            System.out.println("Error al buscar la marca: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("Error al buscar marca: " + e.getMessage());
         }
         return null;
     }
+
+    public List<Marcaa> obtenerTodos() {
+        List<Marcaa> marcas = new ArrayList<>();
+        String sql = SELECT_BASE + " ORDER BY nombre";
+
+        try (Connection c = conexion.conexion();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                marcas.add(mapear(rs));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al listar marcas: " + e.getMessage());
+        }
+        return marcas;
+    }
 }
+

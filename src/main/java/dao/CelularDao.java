@@ -3,118 +3,28 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import model.Celularr;
 import model.Marcaa;
 
+
 public class CelularDao {
 
-    Conexion c = Conexion.getInstancia();
-    MarcaDao daoM = new MarcaDao();
-    AuditoriaDao audit = new AuditoriaDao();
+    private final Conexion conexion = new Conexion();
+    private final MarcaDao marcaDao = new MarcaDao();
 
-    public boolean validarExistenciaForaneaVenta(int id) {
-        try (Connection con = c.conexion()) {
-            PreparedStatement ps = con.prepareStatement("select 1 from detalle_venta where id_celular=? limit 1");
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            return rs.next();
-        } catch (Exception e) {
-            System.out.println("Error al validar: " + e.getMessage());
-        }
-        return false;
-    }
+    private static final String SELECT_BASE = """
+            SELECT id, id_marca, modelo, sistemaOperativo, gama, precio, stock
+            FROM celular
+            """;
 
-    public void crear(Celularr cel) {
-        try (Connection con = c.conexion()) {
-            String sql = "insert into celular (id_marca, modelo, sistemaOperativo, gama, precio, stock) "
-                    + "values (?,?,?,?,?,?)";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, cel.getMarca().getId());
-            ps.setString(2, cel.getModelo());
-            ps.setString(3, cel.getSistemaOperativo().name());
-            ps.setString(4, cel.getGama().name());
-            ps.setDouble(5, cel.getPrecio());
-            ps.setInt(6, cel.getStock());
-            ps.executeUpdate();
-            System.out.println("Celular creado correctamente!");
-            audit.registrar("CREAR", "celular", null,
-                    cel.getMarca().getNombre() + " " + cel.getModelo());
-        } catch (Exception e) {
-            System.out.println("Error en el ingreso de datos: " + e.getMessage());
-        }
-    }
+   
+    private Celularr mapear(ResultSet rs) throws SQLException {
+        Marcaa marca = marcaDao.obtenerPorId(rs.getInt("id_marca"));
 
-    public void actualizar(Celularr cel) {
-        try (Connection con = c.conexion()) {
-            String sql = "update celular set id_marca=?, modelo=?, sistemaOperativo=?, gama=?, "
-                    + "precio=?, stock=? where id=?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, cel.getMarca().getId());
-            ps.setString(2, cel.getModelo());
-            ps.setString(3, cel.getSistemaOperativo().name());
-            ps.setString(4, cel.getGama().name());
-            ps.setDouble(5, cel.getPrecio());
-            ps.setInt(6, cel.getStock());
-            ps.setInt(7, cel.getId());
-            ps.executeUpdate();
-            System.out.println("Celular actualizado correctamente!");
-            audit.registrar("ACTUALIZAR", "celular", cel.getId(), cel.getModelo());
-        } catch (Exception e) {
-            System.out.println("Error en el ingreso de datos: " + e.getMessage());
-        }
-    }
-
-    public void eliminar(int id) {
-        try (Connection con = c.conexion()) {
-            Celularr cel = buscar(id);
-            if (cel == null) {
-                System.out.println("Operacion cancelada, el id no existe");
-            } else if (validarExistenciaForaneaVenta(id)) {
-                System.out.println("Este celular no puede ser eliminado, hay ventas que lo referencian!");
-            } else {
-                PreparedStatement ps = con.prepareStatement("delete from celular where id=?");
-                ps.setInt(1, id);
-                ps.executeUpdate();
-                System.out.println("Celular eliminado correctamente!");
-                audit.registrar("ELIMINAR", "celular", id, cel.getModelo());
-            }
-        } catch (Exception e) {
-            System.out.println("Error en el ingreso de datos: " + e.getMessage());
-        }
-    }
-
-    public List<Celularr> obtenerCelulares() {
-        List<Celularr> lista = new ArrayList<>();
-        try (Connection con = c.conexion()) {
-            PreparedStatement ps = con.prepareStatement("select * from celular order by id");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                lista.add(mapear(rs));
-            }
-        } catch (Exception e) {
-            System.out.println("Error al listar celulares: " + e.getMessage());
-        }
-        return lista;
-    }
-
-    public Celularr buscar(int id) {
-        try (Connection con = c.conexion()) {
-            PreparedStatement ps = con.prepareStatement("select * from celular where id=?");
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapear(rs);
-            }
-        } catch (Exception e) {
-            System.out.println("Error al buscar el celular: " + e.getMessage());
-        }
-        return null;
-    }
-
-    private Celularr mapear(ResultSet rs) throws Exception {
-        Marcaa marca = daoM.buscar(rs.getInt("id_marca"));
         return new Celularr(
                 rs.getInt("id"),
                 rs.getInt("stock"),
@@ -123,5 +33,141 @@ public class CelularDao {
                 marca,
                 Celularr.SistemaOperativo.valueOf(rs.getString("sistemaOperativo")),
                 Celularr.Gama.valueOf(rs.getString("gama")));
+    }
+
+
+
+
+    public boolean insertar(Celularr celular) {
+        String sql = """
+                INSERT INTO celular (id_marca, modelo, sistemaOperativo, gama, precio, stock)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """;
+
+        try (Connection c = conexion.conexion();
+             PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setInt(1, celular.getMarca().getId());
+            ps.setString(2, celular.getModelo());
+            ps.setString(3, celular.getSistemaOperativo().name());
+            ps.setString(4, celular.getGama().name());
+            ps.setDouble(5, celular.getPrecio());
+            ps.setInt(6, celular.getStock());
+
+            if (ps.executeUpdate() == 0) {
+                return false;
+            }
+
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    celular.setId(keys.getInt(1));
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Error al insertar celular: " + e.getMessage());
+        }
+        return false;
+    }
+
+
+
+    public Celularr obtenerPorId(int id) {
+        String sql = SELECT_BASE + " WHERE id = ?";
+
+        try (Connection c = conexion.conexion();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapear(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al buscar celular: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public List<Celularr> obtenerTodos() {
+        List<Celularr> celulares = new ArrayList<>();
+        String sql = SELECT_BASE + " ORDER BY id";
+
+        try (Connection c = conexion.conexion();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                celulares.add(mapear(rs));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al listar celulares: " + e.getMessage());
+        }
+        return celulares;
+    }
+
+   
+
+    public boolean actualizar(Celularr celular) {
+        String sql = """
+                UPDATE celular SET id_marca = ?, modelo = ?, sistemaOperativo = ?,
+                                   gama = ?, precio = ?, stock = ?
+                WHERE id = ?
+                """;
+
+        try (Connection c = conexion.conexion();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setInt(1, celular.getMarca().getId());
+            ps.setString(2, celular.getModelo());
+            ps.setString(3, celular.getSistemaOperativo().name());
+            ps.setString(4, celular.getGama().name());
+            ps.setDouble(5, celular.getPrecio());
+            ps.setInt(6, celular.getStock());
+            ps.setInt(7, celular.getId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar celular: " + e.getMessage());
+        }
+        return false;
+    }
+
+
+    public boolean descontarStock(Connection c, int idCelular, int cantidad) throws SQLException {
+        String sql = "UPDATE celular SET stock = stock - ? WHERE id = ? AND stock >= ?";
+
+        try (PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, cantidad);
+            ps.setInt(2, idCelular);
+            ps.setInt(3, cantidad);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+ 
+    public boolean reponerStock(Connection c, int idCelular, int cantidad) throws SQLException {
+        String sql = "UPDATE celular SET stock = stock + ? WHERE id = ?";
+
+        try (PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, cantidad);
+            ps.setInt(2, idCelular);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+   
+    public boolean eliminar(int id) {
+        String sql = "DELETE FROM celular WHERE id = ?";
+
+        try (Connection c = conexion.conexion();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar celular: " + e.getMessage());
+        }
+        return false;
     }
 }

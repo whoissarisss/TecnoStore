@@ -10,7 +10,6 @@ public class Ventaa {
 
     public static final double IVA = 0.19;
 
-    // El orden se usa en GestionVenta (1. PENDIENTE, 2. PAGADA, 3. CANCELADA)
     public enum Estado {
         PENDIENTE, PAGADA, CANCELADA
     }
@@ -21,14 +20,14 @@ public class Ventaa {
     private Estado estado;
     private List<DetalleVentaa> detalles = new ArrayList<>();
 
-    // Venta nueva (carrito)
+   
     public Ventaa(Clientee cliente) {
         this.cliente = cliente;
         this.fecha = LocalDateTime.now();
         this.estado = Estado.PENDIENTE;
     }
 
-    // Venta leida de la BD
+   
     public Ventaa(int id, Clientee cliente, LocalDateTime fecha, Estado estado) {
         this.id = id;
         this.cliente = cliente;
@@ -48,7 +47,7 @@ public class Ventaa {
         return redondear(getSubtotal() * IVA);
     }
 
-    // Total final, con IVA incluido
+    
     public double getTotal() {
         return redondear(getSubtotal() + getIva());
     }
@@ -57,13 +56,33 @@ public class Ventaa {
         return Math.round(valor * 100.0) / 100.0;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public Clientee getCliente() { return cliente; }
-    public LocalDateTime getFecha() { return fecha; }
-    public Estado getEstado() { return estado; }
-    public void setEstado(Estado estado) { this.estado = estado; }
-    public List<DetalleVentaa> getDetalles() { return detalles; }
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public Clientee getCliente() {
+        return cliente;
+    }
+    
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+    
+    public Estado getEstado() { 
+        return estado; 
+    }
+    
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+    
+    public List<DetalleVentaa> getDetalles() {
+        return detalles;
+    }
 
     @Override
 public String toString() {
