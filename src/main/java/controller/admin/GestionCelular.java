@@ -25,26 +25,29 @@ public class GestionCelular {
     DecimalPositivo decimal = new DecimalPositivo();
     Confirmacion confirmacion = new Confirmacion();
 
-    
-    private Marcaa cargarMarca(String mensaje) {
-        var marcas = daoM.obtenerTodos();
-        if (marcas.isEmpty()) {
-            System.out.println("No hay marcas registradas, vamos a crear la primera.");
-            daoM.insertarMarca(
-                new Marcaa(0, letras.validarSoloLetras("Ingrese el nombre de la marca"))
-            );
+  
+        private Marcaa cargarMarca(String mensaje) {
+        while (true) {
+            var marcas = daoM.obtenerTodos();
+            for (Marcaa m : marcas) {
+                System.out.println(m.getId() + ". " + m.getNombre());
+            }
+            System.out.println("0. Crear una marca nueva");
+            int id = entero.validarEntero(mensaje);
+            if (id == 0) {
+                Marcaa nueva = new Marcaa(0, letras.validarSoloLetras("Ingrese el nombre de la nueva marca"));
+                if (daoM.insertarMarca(nueva)) {
+                    return nueva;
+                }
+                System.out.println("No se pudo crear la marca (¿ya existe?).");
+            } else {
+                Marcaa marca = daoM.obtenerPorId(id);
+                if (marca != null) {
+                    return marca;
+                }
+                System.out.println("No existe una marca con ese ID.");
+            }
         }
-        for (Marcaa m : daoM.obtenerTodos()) {
-            System.out.println(m.getId() + ". " + m.getNombre());
-        }
-        Marcaa marca = daoM.obtenerPorId(entero.validarEntero(mensaje));
-        while (marca == null) {
-            System.out.println("No existe una marca con ese ID.");
-            marca = daoM.obtenerPorId(
-                entero.validarEntero("Ingrese nuevamente el ID de la marca")
-            );
-        }
-        return marca;
     }
 
     private Celularr.SistemaOperativo escogerSistema() {

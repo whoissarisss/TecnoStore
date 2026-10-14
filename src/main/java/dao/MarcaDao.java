@@ -12,7 +12,7 @@ import model.Marcaa;
 
 public class MarcaDao {
 
-    private final Conexion conexion = new Conexion();
+    private final Conexion conexion = Conexion.getInstancia();
 
     private static final String SELECT_BASE = """
             SELECT id, nombre

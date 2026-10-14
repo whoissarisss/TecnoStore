@@ -6,14 +6,19 @@ import java.util.Scanner;
  *
  * @author saras
  */
+
 public class Decimal {
-    private final Scanner sc = new Scanner(System.in);
+
     public double validarDecimal(String mensaje) {
-        System.out.println(mensaje);
         Scanner x = new Scanner(System.in);
-        while (!x.hasNextDouble()) {
+        while (true) {
+            System.out.println(mensaje);
+            // acepta 3500.50 y 3500,50
+            String t = x.nextLine().trim().replace(',', '.');
+            if (t.matches("-?\\d+(\\.\\d+)?")) {
+                return Double.parseDouble(t);
+            }
             System.out.println("Error, se espera un valor decimal");
         }
-        return x.nextDouble();
     }
 }

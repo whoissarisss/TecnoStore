@@ -13,7 +13,7 @@ import model.Marcaa;
 
 public class CelularDao {
 
-    private final Conexion conexion = new Conexion();
+    private final Conexion conexion = Conexion.getInstancia();
     private final MarcaDao marcaDao = new MarcaDao();
 
     private static final String SELECT_BASE = """

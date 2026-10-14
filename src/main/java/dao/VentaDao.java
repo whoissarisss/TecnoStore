@@ -15,7 +15,7 @@ import model.Ventaa;
 
 public class VentaDao {
 
-    private final Conexion conexion = new Conexion();
+    private final Conexion conexion = Conexion.getInstancia();
     private final CelularDao celularDao = new CelularDao();
     private final DetalleVentaDao detalleVentaDao = new DetalleVentaDao();
 

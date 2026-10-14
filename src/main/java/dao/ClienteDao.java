@@ -11,7 +11,7 @@ import model.Clientee;
 
 public class ClienteDao {
 
-    private final Conexion conexion = new Conexion();
+    private final Conexion conexion = Conexion.getInstancia();
     private final PersonaDao personaDao = new PersonaDao();
 
 

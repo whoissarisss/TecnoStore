@@ -13,7 +13,7 @@ import model.DetalleVentaa;
 
 public class DetalleVentaDao {
 
-    private final Conexion conexion = new Conexion();
+    private final Conexion conexion = Conexion.getInstancia();
     private final CelularDao celularDao = new CelularDao();
 
     public boolean insertar(Connection c, DetalleVentaa detalle, int idVenta) throws SQLException {

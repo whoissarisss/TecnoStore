@@ -2,29 +2,20 @@ package view.Validaciones;
 
 import java.util.Scanner;
 
-
 public class Texto {
-    private final Scanner sc = new Scanner(System.in);
-    public String validarTexto(String mensaje) {
-        boolean validacion;
-        String texto = "";
-        Scanner x = new Scanner(System.in);
-        int contador = 0;
-        do {
-            validacion = true;
-            System.out.println(mensaje);
-            texto = x.nextLine();
-            for (int i = 0; i < texto.length(); i++) {
-                contador += texto.charAt(i) == ' ' ? 1 : 0;
-                if (!Character.isLetter(texto.charAt(i)) || texto.charAt(i) != ' ') {
-                    if (texto.charAt(i) == ' ' && i == 0) {
-                        validacion = false;
-                        break;
-                    }
-                }
-            }
-        } while (validacion == false);
-        return texto;
-    }
 
+    public String validarTexto(String mensaje) {
+        Scanner x = new Scanner(System.in);
+        while (true) {
+            System.out.println(mensaje);
+            String texto = x.nextLine().trim();
+            if (texto.isEmpty()) {
+                System.out.println("Error, no puede estar vacío");
+            } else if (texto.length() > 80) {
+                System.out.println("Error, máximo 80 caracteres");
+            } else {
+                return texto.replaceAll("\\s+", " ");
+            }
+        }
+    }
 }
