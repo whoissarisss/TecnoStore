@@ -31,12 +31,7 @@ public class GestionReporte {
     VentaDao daoV = new VentaDao();
     MenuAdministrador menuAdmin = new MenuAdministrador();
 
-    private List<Ventaa> ventasPagadas() {
-        return daoV.obtenerTodos().stream()
-                .filter(v -> v.getEstado() == Ventaa.Estado.PAGADA)
-                .collect(Collectors.toList());
-    }
-
+    
     private void stockBajo() {
         List<Celularr> bajos = daoC.obtenerTodos().stream()
                 .filter(c -> c.getStock() < STOCK_BAJO)
@@ -134,6 +129,12 @@ public class GestionReporte {
             return;
         }
         System.out.println("Reporte generado en: " + ruta.toAbsolutePath());
+    }
+
+    private List<Ventaa> ventasPagadas() {
+        return daoV.obtenerTodos().stream()
+                .filter(v -> v.getEstado() == Ventaa.Estado.PAGADA)
+                .collect(Collectors.toList());
     }
 
   

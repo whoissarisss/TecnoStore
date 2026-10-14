@@ -26,6 +26,48 @@ public class GestionCelular {
     Confirmacion confirmacion = new Confirmacion();
 
   
+    
+    private void agregar() {
+    Marcaa marca = cargarMarca("Escoja el id de la marca");
+    String modelo = texto.validarTexto("Ingrese el modelo");
+    double precio = decimal.validarDecimalPositivo("Ingrese el precio");
+    int stock = rango.validarEnteroRango("Ingrese el stock", 1, 10000);
+    Celularr.SistemaOperativo so = escogerSistema();
+    Celularr.Gama gama = escogerGama();
+    dao.insertar(new Celularr(0, stock, modelo, precio, marca, so, gama));
+}
+
+    private void listar() {
+        var lista = dao.obtenerTodos();
+        if (lista.isEmpty()) {
+            System.out.println("No hay celulares registrados.");
+        }
+        for (Celularr cel : lista) {
+            System.out.println(cel);
+        }
+    }
+    
+    private void actualizar() {
+        listar();
+        int id = entero.validarEntero("Ingrese el id a actualizar");
+        Celularr cel = dao.obtenerPorId(id);
+        if (cel == null) {
+            System.out.println("No existe dicha entidad");
+        } else {
+            menuActualizar(cel);
+        }
+    }
+
+    private void eliminar() {
+        listar();
+        int id = entero.validarEntero("Ingrese el id a eliminar");
+        if (confirmacion.validarConfirmacion("¿Desea eliminar el celular?")) {
+            dao.eliminar(id);
+        } else {
+            System.out.println("Operacion cancelada correctamente!");
+        }
+    }
+
         private Marcaa cargarMarca(String mensaje) {
         while (true) {
             var marcas = daoM.obtenerTodos();
@@ -60,25 +102,6 @@ public class GestionCelular {
         return Celularr.Gama.values()[op - 1];
     }
 
-   private void agregar() {
-    Marcaa marca = cargarMarca("Escoja el id de la marca");
-    String modelo = texto.validarTexto("Ingrese el modelo");
-    double precio = decimal.validarDecimalPositivo("Ingrese el precio");
-    int stock = rango.validarEnteroRango("Ingrese el stock", 1, 10000);
-    Celularr.SistemaOperativo so = escogerSistema();
-    Celularr.Gama gama = escogerGama();
-    dao.insertar(new Celularr(0, stock, modelo, precio, marca, so, gama));
-}
-
-    private void listar() {
-        var lista = dao.obtenerTodos();
-        if (lista.isEmpty()) {
-            System.out.println("No hay celulares registrados.");
-        }
-        for (Celularr cel : lista) {
-            System.out.println(cel);
-        }
-    }
 
     private void menuActualizar(Celularr cel) {
         boolean cancelar = false;
@@ -101,27 +124,6 @@ public class GestionCelular {
         }
         if (cancelar == false) {
             dao.actualizar(cel);
-        }
-    }
-
-    private void actualizar() {
-        listar();
-        int id = entero.validarEntero("Ingrese el id a actualizar");
-        Celularr cel = dao.obtenerPorId(id);
-        if (cel == null) {
-            System.out.println("No existe dicha entidad");
-        } else {
-            menuActualizar(cel);
-        }
-    }
-
-    private void eliminar() {
-        listar();
-        int id = entero.validarEntero("Ingrese el id a eliminar");
-        if (confirmacion.validarConfirmacion("¿Desea eliminar el celular?")) {
-            dao.eliminar(id);
-        } else {
-            System.out.println("Operacion cancelada correctamente!");
         }
     }
 

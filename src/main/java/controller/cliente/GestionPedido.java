@@ -27,6 +27,96 @@ public class GestionPedido {
         this.cliente = cliente;
     }
 
+    private void crear() {
+        Ventaa venta = new Ventaa(cliente);
+        boolean otro;
+        do {
+            DetalleVentaa d = pedirDetalle(venta);
+            if (d != null) {
+                venta.agregarDetalle(d);
+                System.out.println("Agregado: " + d.getCantidad() + "x " + d.getCelular().getModelo());
+            }
+            otro = confirmacion.validarConfirmacion("¿Desea agregar otro celular?");
+        } while (otro);
+
+        if (venta.getDetalles().isEmpty()) {
+            System.out.println("Pedido cancelado, no agrego ningun celular");
+            return;
+        }
+        System.out.println(venta);
+        if (confirmacion.validarConfirmacion("¿Desea confirmar el pedido?")) {
+            dao.insertar(venta);
+            System.out.println("Su pedido queda PENDIENTE hasta que el administrador confirme el pago.");
+        } else {
+            System.out.println("Pedido descartado");
+        }
+    }
+
+    private void ver() {
+        var lista = dao.obtenerPorCliente(cliente.getId());
+        if (lista.isEmpty()) {
+            System.out.println("No tiene pedidos registrados.");
+        }
+        for (Ventaa v : lista) {
+            System.out.println(v);
+        }
+    }
+    
+    private void actualizar() {
+        Ventaa venta = escogerPedido("Ingrese el id del pedido a actualizar", true);
+        if (venta == null) {
+            return;
+        }
+        int op = menuCliente.OpcionActualizarPedido();
+        switch (op) {
+            case 1 -> {
+                DetalleVentaa d = pedirDetalle(venta);
+                 if (d != null) {
+                    venta.agregarDetalle(d);
+                    dao.actualizar(venta);
+                  }
+            }
+            case 2 -> {
+                 if (venta.getDetalles().size() == 1) {
+                      System.out.println("El pedido quedaria vacio, use la opcion Cancelar pedido");
+                 } else {
+                        int numero = entero.validarEntero("Ingrese el numero entre corchetes [ ] del celular a quitar");
+                        
+                            if (numero >= 1 && numero <= venta.getDetalles().size()) {
+                                   venta.getDetalles().remove(numero - 1);
+                                   dao.actualizar(venta);
+                                   System.out.println("Detalle eliminado correctamente!");
+                            } else {
+                                   System.out.println("Numero de detalle no valido.");
+                    }
+    }
+}
+
+            case 3 -> {
+                if (confirmacion.validarConfirmacion("¿Desea cancelar el pedido?")) {
+                    dao.actualizarEstado(venta.getId(), Ventaa.Estado.CANCELADA);
+                } else {
+                    System.out.println("Operacion cancelada correctamente!");
+                }
+            }
+            case 4 -> System.out.println("Operacion cancelada");
+            default -> System.out.println("Opcion no encontrada!");
+        }
+    }
+
+    private void eliminar() {
+        Ventaa venta = escogerPedido("Ingrese el id del pedido a eliminar", false);
+        if (venta == null) {
+            return;
+        }
+        if (confirmacion.validarConfirmacion("¿Desea eliminar el pedido?")) {
+            dao.eliminar(venta.getId());
+        } else {
+            System.out.println("Operacion cancelada correctamente!");
+        }
+    }
+
+    
     private boolean mostrarCatalogo() {
         boolean hay = false;
         for (Celularr cel : daoC.obtenerTodos()) {
@@ -72,40 +162,7 @@ public class GestionPedido {
         return new DetalleVentaa(cel, cantidad);
     }
 
-    private void crear() {
-        Ventaa venta = new Ventaa(cliente);
-        boolean otro;
-        do {
-            DetalleVentaa d = pedirDetalle(venta);
-            if (d != null) {
-                venta.agregarDetalle(d);
-                System.out.println("Agregado: " + d.getCantidad() + "x " + d.getCelular().getModelo());
-            }
-            otro = confirmacion.validarConfirmacion("¿Desea agregar otro celular?");
-        } while (otro);
-
-        if (venta.getDetalles().isEmpty()) {
-            System.out.println("Pedido cancelado, no agrego ningun celular");
-            return;
-        }
-        System.out.println(venta);
-        if (confirmacion.validarConfirmacion("¿Desea confirmar el pedido?")) {
-            dao.insertar(venta);
-            System.out.println("Su pedido queda PENDIENTE hasta que el administrador confirme el pago.");
-        } else {
-            System.out.println("Pedido descartado");
-        }
-    }
-
-    private void ver() {
-        var lista = dao.obtenerPorCliente(cliente.getId());
-        if (lista.isEmpty()) {
-            System.out.println("No tiene pedidos registrados.");
-        }
-        for (Ventaa v : lista) {
-            System.out.println(v);
-        }
-    }
+    
 
     private Ventaa escogerPedido(String mensaje, boolean soloPendientes) {
         boolean hay = false;
@@ -131,63 +188,8 @@ public class GestionPedido {
         return venta;
     }
 
-    private void actualizar() {
-        Ventaa venta = escogerPedido("Ingrese el id del pedido a actualizar", true);
-        if (venta == null) {
-            return;
-        }
-        int op = menuCliente.OpcionActualizarPedido();
-        switch (op) {
-           
-            case 1 -> {
-                DetalleVentaa d = pedirDetalle(venta);
-                 if (d != null) {
-                    venta.agregarDetalle(d);
-                    dao.actualizar(venta);
-                  }
-            }
-
-            
-            case 2 -> {
-                 if (venta.getDetalles().size() == 1) {
-                      System.out.println("El pedido quedaria vacio, use la opcion Cancelar pedido");
-                 } else {
-                        int numero = entero.validarEntero("Ingrese el numero entre corchetes [ ] del celular a quitar");
-                        
-                            if (numero >= 1 && numero <= venta.getDetalles().size()) {
-                                   venta.getDetalles().remove(numero - 1);
-                                   dao.actualizar(venta);
-                                   System.out.println("Detalle eliminado correctamente!");
-                            } else {
-                                   System.out.println("Numero de detalle no valido.");
-                    }
-    }
-}
-
-            case 3 -> {
-                if (confirmacion.validarConfirmacion("¿Desea cancelar el pedido?")) {
-                    dao.actualizarEstado(venta.getId(), Ventaa.Estado.CANCELADA);
-                } else {
-                    System.out.println("Operacion cancelada correctamente!");
-                }
-            }
-            case 4 -> System.out.println("Operacion cancelada");
-            default -> System.out.println("Opcion no encontrada!");
-        }
-    }
-
-    private void eliminar() {
-        Ventaa venta = escogerPedido("Ingrese el id del pedido a eliminar", false);
-        if (venta == null) {
-            return;
-        }
-        if (confirmacion.validarConfirmacion("¿Desea eliminar el pedido?")) {
-            dao.eliminar(venta.getId());
-        } else {
-            System.out.println("Operacion cancelada correctamente!");
-        }
-    }
-
+    
+    
     public void menu() {
         int op;
         do {
