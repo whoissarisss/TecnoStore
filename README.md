@@ -1,13 +1,13 @@
 # ✿ TecnoStore — Sistema de gestión de celulares, clientes y ventas
 ---
 
-## 🌷 Descripción
+## Descripción
 
 **TecnoStore** es una aplicación de consola desarrollada en Java para administrar las operaciones principales de una tienda minorista de teléfonos celulares. El sistema permite gestionar el inventario, los clientes y los pedidos, además de consultar reportes relacionados con las ventas.
 
 El proyecto utiliza Java 17, Maven, MySQL y JDBC. Su organización separa las clases de modelo, controladores, acceso a datos y menús de consola para facilitar la lectura y el mantenimiento del código.
 
-## 🎀 Funcionalidades
+## Funcionalidades
 
 ### 📱 Gestión de celulares
 - Registrar celulares con marca, modelo, sistema operativo, gama, precio y stock.
@@ -17,14 +17,14 @@ El proyecto utiliza Java 17, Maven, MySQL y JDBC. Su organización separa las cl
 - Registrar marcas nuevas cuando sea necesario.
 - Validar datos ingresados mediante clases de validación.
 
-### 🧸 Gestión de clientes y cuentas
+### Gestión de clientes y cuentas
 - Registrar una cuenta e iniciar sesión.
 - Consultar y actualizar datos personales.
 - Ver el perfil del cliente.
 - Eliminar una cuenta.
 - Consultar y eliminar clientes desde el menú de administración.
 
-### 🛍️ Gestión de pedidos y ventas
+### Gestión de pedidos y ventas
 - Crear pedidos y agregar celulares al pedido.
 - Actualizar pedidos, retirar celulares o cancelar pedidos.
 - Consultar pedidos del cliente.
@@ -32,7 +32,7 @@ El proyecto utiliza Java 17, Maven, MySQL y JDBC. Su organización separa las cl
 - Actualizar el estado de una venta: `PENDIENTE`, `PAGADA` o `CANCELADA`.
 - Calcular subtotal, IVA del 19 % y total de la venta.
 
-### 📊 Reportes y análisis
+### Reportes y análisis
 El módulo de reportes contempla:
 - Celulares con stock bajo (menos de 5 unidades).
 - Top 3 de celulares más vendidos, considerando las ventas pagadas.
@@ -41,7 +41,7 @@ El módulo de reportes contempla:
 
 Los reportes utilizan colecciones y operaciones de **Stream API** para filtrar, agrupar y resumir información.
 
-## 🧰 Tecnologías utilizadas
+## Tecnologías utilizadas
 
 | Tecnología | Uso |
 |---|---|
@@ -120,7 +120,7 @@ TecnoStore/
 - **`view`**: presenta los menús de consola y las clases que validan las entradas del usuario.
 - **`TecnoStore.java`**: punto de entrada de la aplicación.
 
-## 🗃️ Base de datos
+## Base de datos
 
 El script SQL incluido se llama **`scriptTecnoStoree.sql`** y crea la base de datos `tecnoStore_SaraRamirez`.
 
@@ -144,7 +144,7 @@ El script también incluye datos de prueba para facilitar la comprobación de lo
 5. Revisa la configuración de conexión de la clase `dao/Conexion.java` y ajústala a tu instalación local.
 6. Confirma que el usuario de MySQL tenga permisos sobre la base de datos.
 
-## ▶️ Requisitos y ejecución
+## Requisitos y ejecución
 
 ### Requisitos previos
 - JDK 17 o una versión compatible con la configuración de Maven.
@@ -164,7 +164,7 @@ El script también incluye datos de prueba para facilitar la comprobación de lo
 Desde la carpeta raíz del proyecto, con Java y Maven disponibles:
 ejecuta la clase principal desde NetBeans o configura el complemento Maven Exec para tu instalación.
 
-## 🖥️ Ejemplo del menú
+## Ejemplo del menú
 
 La aplicación inicia con un menú general para seleccionar el tipo de acceso. Desde el menú de administración se pueden gestionar clientes, celulares, ventas y reportes. Desde el menú de cliente se pueden administrar la cuenta y los pedidos.
 
@@ -183,7 +183,7 @@ Ejemplo ilustrativo del menú de administración:
 ========================================
 ```
 
-## 🧩 Conceptos de programación aplicados
+## Conceptos de programación aplicados
 
 - **Programación Orientada a Objetos:** entidades representadas mediante clases y objetos.
 - **Encapsulamiento:** atributos privados y métodos de acceso.
@@ -193,24 +193,32 @@ Ejemplo ilustrativo del menú de administración:
 - **Colecciones y Stream API:** procesamiento y agrupación de datos para los reportes.
 - **Manejo de excepciones y validaciones:** control de entradas y errores de las operaciones.
 
-## 📄 Archivo de reporte
+## Archivo de reporte
 
 Al generar el reporte, el sistema crea `reporte_ventas.txt` en el directorio de trabajo desde el que se ejecuta la aplicación. El archivo contiene las ventas recuperadas de la base de datos, su estado y un resumen de los totales.
 
-## 📸 Evidencias
+## Evidencias
 
 Agrega aquí capturas reales de la ejecución cuando estén disponibles:
 
 - Menú general.
+<img width="1365" height="723" alt="image" src="https://github.com/user-attachments/assets/a6961e69-9040-41cb-abda-0aa7eec19eb9" />
+
 - Inicio de sesión o registro de cliente.
+<img width="603" height="386" alt="image" src="https://github.com/user-attachments/assets/2d06741c-df14-4ca6-937b-277b1052e7cc" />
+
 - Gestión del inventario.
+<img width="773" height="470" alt="image" src="https://github.com/user-attachments/assets/e13c124f-c672-4563-ad0b-3c8fbc1f2fc6" />
+
 - Gestión de pedidos y ventas.
+<img width="593" height="412" alt="image" src="https://github.com/user-attachments/assets/9ad63323-31d3-4f07-bd90-a6474b97edef" />
+
 - Reportes en consola.
-- Contenido de `reporte_ventas.txt`.
+<img width="680" height="576" alt="image" src="https://github.com/user-attachments/assets/77aa423e-7363-4fea-9b8c-29cdef9e414f" />
 
 ## 🔗 Repositorio
 
-**GitHub:** [Agrega aquí la URL de tu repositorio]
+**GitHub:** https://github.com/whoissarisss/TecnoStore
 
 ---
 <p align="center">✿ Gracias por visitar TecnoStore ✿</p>
