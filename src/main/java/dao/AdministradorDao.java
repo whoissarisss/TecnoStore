@@ -9,7 +9,7 @@ import model.Administradorr;
 
 public class AdministradorDao {
 
-    private final Conexion conexion = Conexion.getInstancia();
+    private final Conexion conexion = new Conexion();
 
     private static final String SELECT_BASE = """
             SELECT p.id, p.nombre, p.apellido, p.identificacion, p.email, p.telefono, a.usuario, a.`contraseña` AS clave

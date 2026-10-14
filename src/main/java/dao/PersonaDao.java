@@ -10,7 +10,7 @@ import model.Personaa;
 
 public class PersonaDao {
 
-    private final Conexion conexion = Conexion.getInstancia();
+    private final Conexion conexion = new Conexion();
  
 
     public boolean insertar(Connection c, Personaa p) throws SQLException {

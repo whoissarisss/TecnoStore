@@ -15,7 +15,7 @@ import model.Ventaa;
 
 public class VentaDao {
 
-    private final Conexion conexion = Conexion.getInstancia();
+    private final Conexion conexion = new Conexion();
     private final CelularDao celularDao = new CelularDao();
     private final DetalleVentaDao detalleVentaDao = new DetalleVentaDao();
 
@@ -70,7 +70,7 @@ public class VentaDao {
                     ps.setString(4, venta.getEstado().name());
 
                     if (ps.executeUpdate() == 0) {
-                        throw new SQLException("No se pudo insertar la venta");
+                        throw new SQLException("No se pudo agregar la venta");
                     }
                     try (ResultSet keys = ps.getGeneratedKeys()) {
                         if (!keys.next()) {
