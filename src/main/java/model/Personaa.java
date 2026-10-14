@@ -1,7 +1,5 @@
 package model;
 
-import view.Marco;
-
 public class Personaa {
     private int id;
     private String nombre;
@@ -76,22 +74,32 @@ public class Personaa {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-  protected String titulo() {
-    return "PERSONA";
-}
 
-protected String[][] campos() {
-    return new String[][]{
-        Marco.fila("ID", id),
-        Marco.fila("Name", nombre + " " + apellido),
-        Marco.fila("Doc", identificacion),
-        Marco.fila("Email", email),
-        Marco.fila("Phone", telefono)
-    };
-}
+    protected String titulo() {
+        return "PERSONA";
+    }
 
-@Override
-public String toString() {
-    return Marco.tarjeta(titulo(), campos());
-}
+    // Filas extra de las clases hijas, ya con formato de caja (empiezan con salto de línea)
+    protected String extra() {
+        return "";
+    }
+
+    @Override
+    public String toString() {
+        String sub = " ".repeat((38 - titulo().length()) / 2) + titulo();
+        return """
+                ╭──────────────────────────────────────╮
+                │              TECNOSTORE              │
+                │%-38s│
+                ├──────────────────────────────────────┤
+                │                                      │
+                │   * Id       : %-22s│
+                │   * Nombre   : %-22.22s│
+                │   * Doc      : %-22.22s│
+                │   * Correo   : %-22.22s│
+                │   * Telefono : %-22.22s│%s
+                │                                      │
+                ╰──────────────────────────────────────╯
+                """.formatted(sub, id, nombre + " " + apellido, identificacion, email, telefono, extra());
+    }
 }

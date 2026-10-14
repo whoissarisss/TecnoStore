@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Arrays;
-import view.Marco;
 
 public class Administradorr extends Personaa {
     private String usuario;
@@ -34,18 +32,14 @@ public class Administradorr extends Personaa {
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
     }
-    
-  
-@Override
-protected String titulo() {
-    return "ADMINISTRADOR";
-}
 
-@Override
-protected String[][] campos() {
-    String[][] base = super.campos();
-    String[][] todos = Arrays.copyOf(base, base.length + 1);
-    todos[base.length] = Marco.fila("User", usuario);
-    return todos;
-}
+    @Override
+    protected String titulo() {
+        return "ADMINISTRADOR";
+    }
+
+    @Override
+    protected String extra() {
+        return String.format("\n│   * Usuario  : %-22.22s│", usuario);
+    }
 }
