@@ -1,5 +1,6 @@
 package dao;
 
+import dao.interfaces.ICelularDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +12,7 @@ import model.Celularr;
 import model.Marcaa;
 
 
-public class CelularDao {
+public class CelularDao implements ICelularDao {
 
     private final Conexion conexion = new Conexion();
     private final MarcaDao marcaDao = new MarcaDao();
@@ -38,6 +39,7 @@ public class CelularDao {
 
 
 
+    @Override
     public boolean insertar(Celularr celular) {
         String sql = """
                 INSERT INTO celular (id_marca, modelo, sistemaOperativo, gama, precio, stock)
@@ -72,6 +74,7 @@ public class CelularDao {
 
 
 
+    @Override
     public Celularr obtenerPorId(int id) {
         String sql = SELECT_BASE + " WHERE id = ?";
 
@@ -90,6 +93,7 @@ public class CelularDao {
         return null;
     }
 
+    @Override
     public List<Celularr> obtenerTodos() {
         List<Celularr> celulares = new ArrayList<>();
         String sql = SELECT_BASE + " ORDER BY id";
@@ -109,6 +113,7 @@ public class CelularDao {
 
    
 
+    @Override
     public boolean actualizar(Celularr celular) {
         String sql = """
                 UPDATE celular SET id_marca = ?, modelo = ?, sistemaOperativo = ?,
@@ -134,6 +139,7 @@ public class CelularDao {
     }
 
 
+    @Override
     public boolean descontarStock(Connection c, int idCelular, int cantidad) throws SQLException {
         String sql = "UPDATE celular SET stock = stock - ? WHERE id = ? AND stock >= ?";
 
@@ -146,6 +152,7 @@ public class CelularDao {
     }
 
  
+    @Override
     public boolean reponerStock(Connection c, int idCelular, int cantidad) throws SQLException {
         String sql = "UPDATE celular SET stock = stock + ? WHERE id = ?";
 
@@ -157,6 +164,7 @@ public class CelularDao {
     }
 
    
+    @Override
     public boolean eliminar(int id) {
         String sql = "DELETE FROM celular WHERE id = ?";
 

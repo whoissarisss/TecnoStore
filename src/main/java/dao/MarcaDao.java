@@ -1,6 +1,7 @@
 package dao;
 
 
+import dao.interfaces.IMarcaDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Marcaa;
 
-public class MarcaDao {
+public class MarcaDao implements IMarcaDao {
 
     private final Conexion conexion = new Conexion();
 
@@ -24,6 +25,7 @@ public class MarcaDao {
     }
 
   
+    @Override
     public boolean insertarMarca(Marcaa marca) {
         String sql = "INSERT INTO marca (nombre) VALUES (?)";
         try (Connection c = conexion.conexion();
@@ -45,6 +47,7 @@ public class MarcaDao {
     }
 
   
+    @Override
     public Marcaa obtenerPorId(int id) {
         String sql = SELECT_BASE + " WHERE id = ?";
 
@@ -63,6 +66,7 @@ public class MarcaDao {
         return null;
     }
 
+    @Override
     public List<Marcaa> obtenerTodos() {
         List<Marcaa> marcas = new ArrayList<>();
         String sql = SELECT_BASE + " ORDER BY nombre";

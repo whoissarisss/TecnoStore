@@ -1,5 +1,6 @@
 package dao;
 
+import dao.interfaces.IPersonaDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,11 +9,12 @@ import java.sql.Statement;
 import model.Personaa;
 
 
-public class PersonaDao {
+public class PersonaDao implements IPersonaDao {
 
     private final Conexion conexion = new Conexion();
  
 
+    @Override
     public boolean insertar(Connection c, Personaa p) throws SQLException {
         String sql = """
                 INSERT INTO persona (nombre, apellido, identificacion, email, telefono)
@@ -42,6 +44,7 @@ public class PersonaDao {
 
  
 
+    @Override
     public boolean actualizar(Personaa p) {
         String sql = """
                 UPDATE persona SET nombre = ?, apellido = ?, identificacion = ?,
@@ -66,6 +69,7 @@ public class PersonaDao {
     }
 
  
+    @Override
     public boolean eliminar(int id) {
         String sql = "DELETE FROM persona WHERE id = ?";
 
@@ -81,20 +85,24 @@ public class PersonaDao {
     }
 
 
+    @Override
     public boolean existeEmail(String email) {
         return existe("SELECT 1 FROM persona WHERE email = ?", email);
     }
 
+    @Override
     public boolean existeIdentificacion(String identificacion) {
         return existe("SELECT 1 FROM persona WHERE identificacion = ?", identificacion);
     }
 
 
+    @Override
     public boolean existeEmailDeOtra(String email, int id) {
         return existe("SELECT 1 FROM persona WHERE email = ? AND id <> ?", email, id);
     }
 
  
+    @Override
     public boolean existeIdentificacionDeOtra(String identificacion, int id) {
         return existe("SELECT 1 FROM persona WHERE identificacion = ? AND id <> ?", identificacion, id);
     }

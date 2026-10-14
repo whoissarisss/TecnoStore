@@ -1,5 +1,6 @@
 package dao;
 
+import dao.interfaces.IClienteDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,7 +10,7 @@ import java.util.List;
 import model.Clientee;
 
 
-public class ClienteDao {
+public class ClienteDao implements IClienteDao {
 
     private final Conexion conexion = new Conexion();
     private final PersonaDao personaDao = new PersonaDao();
@@ -34,6 +35,7 @@ public class ClienteDao {
  
 
 
+    @Override
     public boolean insertar(Clientee cliente) {
         String sql = "INSERT INTO cliente (id) VALUES (?)";
 
@@ -63,15 +65,18 @@ public class ClienteDao {
 
 
 
+    @Override
     public Clientee obtenerPorId(int id) {
         return obtenerUno(SELECT_BASE + " WHERE p.id = ?", id);
     }
 
     // Para iniciar sesión: el cliente con esa identificación, o null si no existe
+    @Override
     public Clientee obtenerPorIdentificacion(String identificacion) {
         return obtenerUno(SELECT_BASE + " WHERE p.identificacion = ?", identificacion);
     }
 
+    @Override
     public List<Clientee> obtenerTodos() {
         List<Clientee> clientes = new ArrayList<>();
         String sql = SELECT_BASE + " ORDER BY p.apellido, p.nombre";
@@ -108,18 +113,22 @@ public class ClienteDao {
 
 
 
+    @Override
     public boolean existeEmail(String email) {
         return personaDao.existeEmail(email);
     }
 
+    @Override
     public boolean existeIdentificacion(String identificacion) {
         return personaDao.existeIdentificacion(identificacion);
     }
 
+    @Override
     public boolean existeEmailDeOtro(String email, int id) {
         return personaDao.existeEmailDeOtra(email, id);
     }
 
+    @Override
     public boolean existeIdentificacionDeOtro(String identificacion, int id) {
         return personaDao.existeIdentificacionDeOtra(identificacion, id);
     }
@@ -127,11 +136,13 @@ public class ClienteDao {
 
 
 
+    @Override
     public boolean actualizar(Clientee cliente) {
         return personaDao.actualizar(cliente);
     }
 
 
+    @Override
     public boolean eliminar(int id) {
         return personaDao.eliminar(id);
     }

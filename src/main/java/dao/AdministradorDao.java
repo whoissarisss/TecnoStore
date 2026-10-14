@@ -1,5 +1,6 @@
 package dao;
 
+import dao.interfaces.IAdministradorDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,7 +8,7 @@ import java.sql.SQLException;
 import model.Administradorr;
 
 
-public class AdministradorDao {
+public class AdministradorDao implements IAdministradorDao {
 
     private final Conexion conexion = new Conexion();
 
@@ -18,6 +19,7 @@ public class AdministradorDao {
             """;
 
  
+    @Override
     public Administradorr obtenerPorUsuario(String usuario) {
         String sql = SELECT_BASE + " WHERE a.usuario = ?";
 

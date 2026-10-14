@@ -1,5 +1,6 @@
 package dao;
 
+import dao.interfaces.IDetalleVentaDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,11 +12,12 @@ import model.Celularr;
 import model.DetalleVentaa;
 
 
-public class DetalleVentaDao {
+public class DetalleVentaDao implements IDetalleVentaDao {
 
     private final Conexion conexion = new Conexion();
     private final CelularDao celularDao = new CelularDao();
 
+    @Override
     public boolean insertar(Connection c, DetalleVentaa detalle, int idVenta) throws SQLException {
         String sql = """
                 INSERT INTO detalle_venta (id_venta, id_celular, cantidad, subtotal)
@@ -42,6 +44,7 @@ public class DetalleVentaDao {
     }
 
 
+    @Override
     public List<DetalleVentaa> obtenerPorVenta(int idVenta) {
         List<DetalleVentaa> detalles = new ArrayList<>();
         String sql = "SELECT id, id_celular, cantidad, subtotal FROM detalle_venta WHERE id_venta = ? ORDER BY id";
@@ -67,6 +70,7 @@ public class DetalleVentaDao {
     }
 
 
+    @Override
     public boolean eliminarPorVenta(Connection c, int idVenta) throws SQLException {
         try (PreparedStatement ps = c.prepareStatement("DELETE FROM detalle_venta WHERE id_venta = ?")) {
             ps.setInt(1, idVenta);

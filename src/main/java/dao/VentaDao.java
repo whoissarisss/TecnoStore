@@ -1,5 +1,6 @@
 package dao;
 
+import dao.interfaces.IVentaDao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +14,7 @@ import model.DetalleVentaa;
 import model.Ventaa;
 
 
-public class VentaDao {
+public class VentaDao implements IVentaDao {
 
     private final Conexion conexion = new Conexion();
     private final CelularDao celularDao = new CelularDao();
@@ -54,6 +55,7 @@ public class VentaDao {
     }
 
  
+    @Override
     public boolean insertar(Ventaa venta) {
         String sql = """
                 INSERT INTO venta (id_cliente, fecha, total, estado)
@@ -96,6 +98,7 @@ public class VentaDao {
 
  
 
+    @Override
     public Ventaa obtenerPorId(int id) {
         String sql = SELECT_BASE + " WHERE v.id = ?";
 
@@ -114,11 +117,13 @@ public class VentaDao {
         return null;
     }
 
+    @Override
     public List<Ventaa> obtenerTodos() {
         return obtenerLista(SELECT_BASE + " ORDER BY v.id DESC", null);
     }
 
 
+    @Override
     public List<Ventaa> obtenerPorCliente(int idCliente) {
         return obtenerLista(SELECT_BASE + " WHERE v.id_cliente = ? ORDER BY v.id DESC", idCliente);
     }
@@ -146,6 +151,7 @@ public class VentaDao {
   
 
 
+    @Override
     public boolean actualizar(Ventaa venta) {
         String sql = "UPDATE venta SET total = ? WHERE id = ? AND estado = 'PENDIENTE'";
 
@@ -179,6 +185,7 @@ public class VentaDao {
     }
 
 
+    @Override
     public boolean actualizarEstado(int id, Ventaa.Estado nuevo) {
         try (Connection c = conexion.conexion()) {
             c.setAutoCommit(false);
@@ -250,6 +257,7 @@ public class VentaDao {
     }
 
 
+    @Override
     public boolean eliminar(int id) {
         String sql = "DELETE FROM venta WHERE id = ? AND estado <> 'PAGADA'";
 
